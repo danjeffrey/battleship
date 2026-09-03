@@ -1,8 +1,8 @@
-// getGameboardFactory.js
+// GameBoard.js
 "use strict";
 import Ship from "./Ship.js";
 
-export default class Gameboard {
+export default class GameBoard {
   rows = [...Array(10)].map((_, i) => i + 1); // 1–10
   cols = [...Array(10)].map((_, i) => i + 1); // 1–10
   // String.fromCharCode(65 + i)); // A–J

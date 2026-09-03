@@ -14,6 +14,16 @@ it("new Player is bot", () => {
   expect(new Player(false, "Joe Schmoe").isReal).toBe(false);
 });
 
+it("new Game with player boards", () => {
+  expect(
+    (() => {
+      const player1 = new Player(true, "Me");
+      player1.placeAllShips();
+      return player1.gameBoard.receiveAttack(3, 1);
+    })(),
+  ).toBe(true);
+});
+
 
 
 

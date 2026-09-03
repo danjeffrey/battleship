@@ -1,19 +1,19 @@
-//Gameboard.test.js
+//GameBoard.test.js
 "use strict";
-import Gameboard from "../src/Gameboard.js";
+import GameBoard from "../src/GameBoard.js";
 
 it("grid for placement 4, 4, 2, V", () => {
-  expect(new Gameboard().placeShip(4, 4, 2, "V").grid).toEqual(placeShipVboard);
+  expect(new GameBoard().placeShip(4, 4, 2, "V").grid).toEqual(placeShipVboard);
 });
 
 it("grid for placement 4, 4, 2, H", () => {
-  expect(new Gameboard().placeShip(4, 4, 2, "H").grid).toEqual(placeShipHboard);
+  expect(new GameBoard().placeShip(4, 4, 2, "H").grid).toEqual(placeShipHboard);
 });
 
 it("receiveAttack() hit", () => {
   expect(
     (() => {
-      const board = new Gameboard();
+      const board = new GameBoard();
       board.placeShip(4, 4, 2, "V");
       return board.receiveAttack(4, 2);
     })(),
@@ -23,7 +23,7 @@ it("receiveAttack() hit", () => {
 it("receiveAttack() miss", () => {
   expect(
     (() => {
-      const board = new Gameboard();
+      const board = new GameBoard();
       board.placeShip(4, 4, 2, "H");
       return board.receiveAttack(5, 2);
     })(),
@@ -33,7 +33,7 @@ it("receiveAttack() miss", () => {
 it("receiveAttack() big miss", () => {
   expect(
     (() => {
-      const board = new Gameboard();
+      const board = new GameBoard();
       board.placeShip(4, 4, 2, "H");
       return board.receiveAttack(8, 8);
     })(),
@@ -43,7 +43,7 @@ it("receiveAttack() big miss", () => {
 it("allShipsSunk() false", () => {
   expect(
     (() => {
-      const board = new Gameboard();
+      const board = new GameBoard();
       board.placeShip(4, 4, 2, "H");
       return board.allShipsSunk()
     })(),
@@ -53,7 +53,7 @@ it("allShipsSunk() false", () => {
 it("allShipsSunk() true", () => {
   expect(
     (() => {
-      const board = new Gameboard();
+      const board = new GameBoard();
       board.placeShip(4, 4, 2, "H");
       board.receiveAttack(4, 2);
       board.receiveAttack(4, 3);

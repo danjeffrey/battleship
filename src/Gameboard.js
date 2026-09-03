@@ -8,6 +8,7 @@ export default class Gameboard {
   // String.fromCharCode(65 + i)); // A–J
   grid = {};
   ships = []; // a list of ship instances
+  missedAttacks = [];
 
   constructor() {
     for (const r of this.rows) {
@@ -35,12 +36,23 @@ export default class Gameboard {
 
   receiveAttack(row, col) {
     let result = false;
-    if ( this.grid[row][col] !== -1 ) {
-        // get ship instance and call hit() on it.
-        let idx = this.grid[row][col];
-        (this.ships[idx]).hit();
-        result = true;
+    if (this.grid[row][col] !== -1) {
+      // get ship instance and call hit() on it.
+      let idx = this.grid[row][col];
+      this.ships[idx].hit();
+      result = true;
+    } else {
+      this.missedAttacks.push({ row, col });
     }
     return result;
+  }
+
+  allShipsSunk() {
+      for (let i = 0; i < this.ships.length; i++) {
+        if(!this.ships[i].isSunk() ) {
+          return false;
+        }
+      }
+      return true;
   }
 }

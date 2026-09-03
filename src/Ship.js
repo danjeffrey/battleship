@@ -13,7 +13,6 @@ export default class Ship {
 
     hit() {
         this.hits++;
-        this.isSunk();
         return this;
     }
 

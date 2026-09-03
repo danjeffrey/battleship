@@ -40,6 +40,31 @@ it("receiveAttack() big miss", () => {
   ).toBe(false);
 });
 
+it("allShipsSunk() false", () => {
+  expect(
+    (() => {
+      const board = new Gameboard();
+      board.placeShip(4, 4, 2, "H");
+      return board.allShipsSunk()
+    })(),
+  ).toBe(false);
+});
+
+it("allShipsSunk() true", () => {
+  expect(
+    (() => {
+      const board = new Gameboard();
+      board.placeShip(4, 4, 2, "H");
+      board.receiveAttack(4, 2);
+      board.receiveAttack(4, 3);
+      board.receiveAttack(4, 4);
+      board.receiveAttack(4, 5);
+      return board.allShipsSunk()
+    })(),
+  ).toBe(true);
+});
+
+
 const placeShipVboard = {
   1: {
     1: -1,

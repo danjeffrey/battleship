@@ -1,4 +1,5 @@
 // src/generateFooter.js
+"use strict"
 
 export default function generateFooter() {
   const divFooter = document.getElementById("djFooter");

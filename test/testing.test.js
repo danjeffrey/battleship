@@ -9,10 +9,6 @@ import {
   caesarCipher,
 } from "../src/testing.js";
 
-it("works", () => {
-  expect(1).toBe(1);
-});
-
 it("Capitalize sentence case", () => {
   expect(capitalize("sentence case.")).toBe("Sentence case.");
 });

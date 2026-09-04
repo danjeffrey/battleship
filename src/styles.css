@@ -1,3 +1,73 @@
-h1 {
+.roboto {
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  font-family: Roboto;
+}
+
+.game {
+  display: flex;
+  gap: 20px;
+}
+
+.player {
+  width: 400px;
+  height: 440px;
+  padding: 10px;  
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gameBoard {
+  background-color: lightBlue;
+  width: 400px;
+  height: 400px;
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  grid-template-rows: repeat(10, 40px);
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #aaa;
+
+  display: flex;
+  justify-content: center;  /* horizontal */
+  align-items: center;       /* vertical */  
+}
+
+.cell.hit {
   color: red;
+}
+
+.cell.miss {
+  color: blue;
+}
+
+.cell.containsShip {
+  background-color: lightGray;
+}
+
+.playerTitle {
+  font-weight: 800;
+}
+
+.playerStats {
+  font-style: italic;
+}
+
+.footer {
+  font-size: small;
 }

@@ -2,9 +2,34 @@
 
 export default class GameRenderer {
   gameManager;
+  player1Title;
+  player2Title;
 
   constructor(mgr) {
     this.gameManager = mgr;
+    this.manageButtons();
+  }
+
+  manageButtons() {
+    this.player1Title = document.getElementById("player1Title");
+    this.player2Title = document.getElementById("player2Title");
+    let player1Edit = document.getElementById("player1Edit");
+    let player2Edit = document.getElementById("player2Edit");
+    player1Edit.addEventListener('click', this.editPlayer.bind(this));
+    player2Edit.addEventListener('click', this.editPlayer.bind(this));
+  }
+  
+  editPlayer(event) {
+    const newValue = prompt("Enter a name:");
+    console.log("You entered:", newValue);
+    const btn = event.target;
+    if ( btn.id.includes("1") ) {
+      this.gameManager.player1.name = newValue;
+      this.player1Title.textContent = newValue;
+    } else {
+      this.gameManager.player2.name = newValue;
+      this.player2Title.textContent = newValue;
+    }
   }
 
   handlePlayerClick(event) {

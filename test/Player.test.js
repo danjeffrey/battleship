@@ -7,17 +7,17 @@ it("new Player", () => {
 });
 
 it("new Player is real", () => {
-  expect(new Player(true, "Joe Schmoe").isReal).toBe(true);
+  expect(new Player(false, "Joe Schmoe").isBot).toBe(false);
 });
 
 it("new Player is bot", () => {
-  expect(new Player(false, "Joe Schmoe").isReal).toBe(false);
+  expect(new Player(true, "Joe Schmoe").isBot).toBe(true);
 });
 
 it("new Game with player boards", () => {
   expect(
     (() => {
-      const player1 = new Player(true, "Me");
+      const player1 = new Player(false, "Me");
       player1.placeAllShips();
       return player1.gameBoard.receiveAttack(3, 1);
     })(),

@@ -7,28 +7,34 @@ import Player from "./Player.js";
 export default class GameManager {
   player1 = null;
   player2 = null;
-  whoGoesNext = 1;
+  currentPlayer;
 
-  constructor() {}
+  constructor(plyr1, plyr2) {
+    this.player1 = plyr1;
+    this.player2 = plyr2;
+    this.currentPlayer = this.player1;
+  }
 
   isReady() {
     return this.player1 !== null && this.player2 !== null;
   }
 
-  newGame(plyr1, plyr2) {
-    this.player1 = plyr1;
-    this.player2 = plyr2;
-  }
-
   playerMove(row, col) {
     let result = "miss";
+    let hit = false;
 
-    //if (activePlayer === player1) {
-    let hit = this.player2.gameBoard.receiveAttack(row, col);
+    if (this.currentPlayer === this.player1) {
+      hit = this.player2.gameBoard.receiveAttack(row, col);
+    } else {
+      hit = this.player1.gameBoard.receiveAttack(row, col);
+    }
     if (hit) {
       result = "hit";
+    } else {
+      this.currentPlayer =
+        this.currentPlayer === this.player1 ? this.player2 : this.player1;
     }
-    //}
     return result;
   }
 }
+

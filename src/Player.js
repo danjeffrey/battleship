@@ -2,12 +2,12 @@
 import GameBoard from "./GameBoard.js";
 
 export default class Player {
-  isReal = true;
+  isBot = false;
   name = "no name";
   gameBoard = new GameBoard();
 
-  constructor(isRealPlayer, playerName) {
-    this.isReal = isRealPlayer;
+  constructor(isRobot, playerName) {
+    this.isBot = isRobot;
     this.name = playerName;
   }
 

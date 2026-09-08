@@ -71,3 +71,8 @@ body {
 .footer {
   font-size: small;
 }
+
+.playerHeader {
+  display: flex;
+  justify-content: space-between; 
+}

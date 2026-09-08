@@ -14,14 +14,14 @@ it("receiveAttack() hit", () => {
   ).toBe(true);
 });
 
-it("receiveAttack() hit", () => {
+it("manager is ready", () => {
   expect(
     (() => {
       const mgr = new GameManager(
-        new Player(true, "Joe Schmoe"),
-        new Player(false, "BotMan"),
+        new Player(false, "Joe Schmoe"),
+        new Player(true, "BotMan"),
       );
-      return mgr.ready();
+      return mgr.isReady();
     })(),
   ).toBe(true);
 });
@@ -29,9 +29,9 @@ it("receiveAttack() hit", () => {
 it("new Game with player boards", () => {
   expect(
     (() => {
-      const player1 = new Player(true, "Me");
+      const player1 = new Player(false, "Me");
       player1.placeAllShips();
-      const player2 = new Player(false, "bot");
+      const player2 = new Player(true, "bot");
       player2.placeAllShips();
       const mgr = new GameManager(player1, player2);
       return (

@@ -5,7 +5,6 @@ import Ship from "./Ship.js";
 export default class GameBoard {
   rows = [...Array(10)].map((_, i) => i + 1); // 1–10
   cols = [...Array(10)].map((_, i) => i + 1); // 1–10
-  // String.fromCharCode(65 + i)); // A–J
   grid = {};
   ships = []; // a list of ship instances
   missedAttacks = [];
@@ -39,8 +38,10 @@ export default class GameBoard {
     if (this.grid[row][col] !== -1) {
       // get ship instance and call hit() on it.
       let idx = this.grid[row][col];
-      this.ships[idx].hit();
-      result = true;
+      if (idx !== undefined) {
+        this.ships[idx].hit();
+        result = true;
+      }
     } else {
       this.missedAttacks.push({ row, col });
     }
@@ -48,11 +49,11 @@ export default class GameBoard {
   }
 
   allShipsSunk() {
-      for (let i = 0; i < this.ships.length; i++) {
-        if(!this.ships[i].isSunk() ) {
-          return false;
-        }
+    for (let i = 0; i < this.ships.length; i++) {
+      if (!this.ships[i].isSunk()) {
+        return false;
       }
-      return true;
+    }
+    return true;
   }
 }

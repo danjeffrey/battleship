@@ -76,3 +76,9 @@ body {
   display: flex;
   justify-content: space-between; 
 }
+
+.alert {
+  font-style: italic;
+  font-weight: 500;
+  color: green;
+}

@@ -8,6 +8,8 @@ export default class GameRenderer {
   player2Alert;
   player1BoardDiv;
   player2BoardDiv;
+  stats1;
+  stats2;
 
   constructor(mgr) {
     this.gameManager = mgr;
@@ -30,6 +32,9 @@ export default class GameRenderer {
 
     this.player1BoardDiv = document.getElementById("gameBoard1");
     this.player2BoardDiv = document.getElementById("gameBoard2");
+
+    this.stats1 = document.getElementById("stats1");
+    this.stats2 = document.getElementById("stats2");
   }
 
   editPlayer(event) {
@@ -52,6 +57,9 @@ export default class GameRenderer {
       // skip it. Click event has the wrong target
     } else {
       const [row, col] = cell.id.match(/\d+/g).map(Number);
+      // Save the active player so we can update the stats for that player:
+      const lastPlayer = this.gameManager.currentPlayer;
+      // playerMove() changes the current player. 
       let result = this.gameManager.playerMove(row, col);
       cell.classList.add(result);
       if (result === "hit") {
@@ -60,17 +68,18 @@ export default class GameRenderer {
         cell.textContent = "-";
         this.adjustForCurrentPlayer();
       }
+      this.updatePlayerStats(lastPlayer);
     }
   }
 
-  adjustForCurrentPlayer() {
+  adjustForCurrentPlayer(player) {
     if (this.gameManager.currentPlayer === this.gameManager.player1) {
       this.player1Alert.textContent = "Your turn!";
       this.player2Alert.textContent = "";
       if (this.player2BoardDiv.classList.contains("frozen")) {
         this.player2BoardDiv.classList.remove("frozen");
       }
-      if ( ! this.player1BoardDiv.classList.contains("frozen")) {
+      if (!this.player1BoardDiv.classList.contains("frozen")) {
         this.player1BoardDiv.classList.add("frozen");
       }
     } else {
@@ -79,7 +88,7 @@ export default class GameRenderer {
       if (this.player1BoardDiv.classList.contains("frozen")) {
         this.player1BoardDiv.classList.remove("frozen");
       }
-      if ( ! this.player2BoardDiv.classList.contains("frozen")) {
+      if (!this.player2BoardDiv.classList.contains("frozen")) {
         this.player2BoardDiv.classList.add("frozen");
       }
     }
@@ -96,7 +105,7 @@ export default class GameRenderer {
     }
     this.renderPlayerHeader(player, order);
     this.renderGameBoard(player, order);
-    this.renderPlayerStats(player, order);
+    this.updatePlayerStats(player);
   }
 
   renderPlayerHeader(player, order) {
@@ -121,12 +130,6 @@ export default class GameRenderer {
     this.renderCells(player, divGameBoard);
   }
 
-  renderPlayerStats(player, order) {
-    const statsID = "stats" + order;
-    const divPlayerStats = document.getElementById(statsID);
-    divPlayerStats.textContent = "Player " + order + " stats go here.";
-  }
-
   renderCells(player, div) {
     const gameBoard = player.gameBoard;
     gameBoard.rows.forEach(function (row) {
@@ -138,5 +141,15 @@ export default class GameRenderer {
         cell.classList.add("cell");
       });
     });
+  }
+
+  updatePlayerStats(lastPlayer) {
+    let strStats =
+      "" + lastPlayer.hits + " hits, " + lastPlayer.misses + " misses";
+    if (lastPlayer === this.gameManager.player1) {
+      this.stats1.textContent = strStats;
+    } else {
+      this.stats2.textContent = strStats;
+    }
   }
 }

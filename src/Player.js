@@ -5,6 +5,8 @@ export default class Player {
   isBot = false;
   name = "no name";
   gameBoard = new GameBoard();
+  hits = 0;
+  misses = 0;
 
   constructor(isRobot, playerName) {
     this.isBot = isRobot;

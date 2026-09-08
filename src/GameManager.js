@@ -28,7 +28,10 @@ export default class GameManager {
     }
     if (hit) {
       result = "hit";
+      this.currentPlayer.hits += 1;
     } else {
+      result = "miss";
+      this.currentPlayer.misses += 1;
       this.changePlayers();
     }
     return result;

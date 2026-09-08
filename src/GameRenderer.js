@@ -6,6 +6,8 @@ export default class GameRenderer {
   player2Title;
   player1Alert;
   player2Alert;
+  player1BoardDiv;
+  player2BoardDiv;
 
   constructor(mgr) {
     this.gameManager = mgr;
@@ -25,6 +27,9 @@ export default class GameRenderer {
     let player2Edit = document.getElementById("player2Edit");
     player1Edit.addEventListener("click", this.editPlayer.bind(this));
     player2Edit.addEventListener("click", this.editPlayer.bind(this));
+
+    this.player1BoardDiv = document.getElementById("gameBoard1");
+    this.player2BoardDiv = document.getElementById("gameBoard2");
   }
 
   editPlayer(event) {
@@ -53,13 +58,29 @@ export default class GameRenderer {
         cell.textContent = "X";
       } else {
         cell.textContent = "-";
+        this.adjustForCurrentPlayer();
       }
-      if (this.gameManager.currentPlayer === this.gameManager.player1) {
-        this.player1Alert.textContent = "Your turn!";
-        this.player2Alert.textContent = "";
-      } else {
-        this.player1Alert.textContent = "";
-        this.player2Alert.textContent = "Your turn!";
+    }
+  }
+
+  adjustForCurrentPlayer() {
+    if (this.gameManager.currentPlayer === this.gameManager.player1) {
+      this.player1Alert.textContent = "Your turn!";
+      this.player2Alert.textContent = "";
+      if (this.player2BoardDiv.classList.contains("frozen")) {
+        this.player2BoardDiv.classList.remove("frozen");
+      }
+      if ( ! this.player1BoardDiv.classList.contains("frozen")) {
+        this.player1BoardDiv.classList.add("frozen");
+      }
+    } else {
+      this.player1Alert.textContent = "";
+      this.player2Alert.textContent = "Your turn!";
+      if (this.player1BoardDiv.classList.contains("frozen")) {
+        this.player1BoardDiv.classList.remove("frozen");
+      }
+      if ( ! this.player2BoardDiv.classList.contains("frozen")) {
+        this.player2BoardDiv.classList.add("frozen");
       }
     }
   }

@@ -38,6 +38,10 @@ body {
   grid-template-rows: repeat(10, 40px);
 }
 
+.frozen {
+  pointer-events: none;  
+}
+
 .cell {
   width: 40px;
   height: 40px;

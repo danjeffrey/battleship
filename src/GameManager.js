@@ -1,8 +1,6 @@
 // GameManager.js
 
 import Player from "./Player.js";
-//import GameBoard from "./GameBoard.js";
-//import GameManager from "./GameManager.js";
 
 export default class GameManager {
   player1 = null;
@@ -37,10 +35,8 @@ export default class GameManager {
   }
 
   changePlayers() {
-      // console.log("before: " + this.currentPlayer.name);
       this.currentPlayer =
         this.currentPlayer === this.player1 ? this.player2 : this.player1;
-      // console.log("after: " + this.currentPlayer.name);
   }
 
 }

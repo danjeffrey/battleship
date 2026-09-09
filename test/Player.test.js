@@ -24,6 +24,14 @@ it("new Game with player boards", () => {
   ).toBe(true);
 });
 
+it("new Player id is 1", () => {
+  expect(new Player(true, "Joe Schmoe", 1).id).toBe(1);
+});
+
+it("new Player id is 2", () => {
+  expect(new Player(true, "Joe Schmoe", 2).id).toBe(2);
+});
+
 
 
 

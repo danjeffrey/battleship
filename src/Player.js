@@ -8,6 +8,8 @@ export default class Player {
   hits = 0;
   misses = 0;
   id = 0;
+  wins = 0;
+  losses = 0;
 
   constructor(isRobot, playerName, id) {
     this.isBot = isRobot;

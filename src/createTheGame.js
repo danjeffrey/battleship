@@ -11,6 +11,6 @@ export default function createTheGame() {
     player2.placeAllShips();
     const gameManager = new GameManager(player1, player2);
     const gameRenderer = new GameRenderer(gameManager);
-    gameRenderer.renderGameBoards();    
-}
+    gameRenderer.renderGameBoards();
 
+}

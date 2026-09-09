@@ -39,16 +39,34 @@ export default class GameManager {
       this.currentPlayer.misses += 1;
       this.changePlayers();
     }
-    if ( weHaveAWinner ) {
+    if (weHaveAWinner) {
       this.winningPlayer = this.currentPlayer;
+      this.winningPlayer.wins += 1;
+      if (this.winningPlayer === this.player1) {
+        this.player2.losses += 1;
+      } else {
+        this.player1.losses += 1;
+      }
     }
     return result;
   }
 
   changePlayers() {
-      this.currentPlayer =
-        this.currentPlayer === this.player1 ? this.player2 : this.player1;
+    this.currentPlayer =
+      this.currentPlayer === this.player1 ? this.player2 : this.player1;
   }
 
-}
+  newGame() {
+    // Clear out hits, misses, etc.
+    this.currentPlayer = this.player1;
+    this.winningPlayer = null;
 
+    this.player1.hits = 0;
+    this.player1.misses = 0;
+    this.player1.gameBoard.clear();
+
+    this.player2.hits = 0;
+    this.player2.misses = 0;
+    this.player2.gameBoard.clear();
+  }
+}

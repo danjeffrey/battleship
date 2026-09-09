@@ -56,4 +56,12 @@ export default class GameBoard {
     }
     return true;
   }
+
+  clear() {
+    for (let i = 0; i < this.ships.length; i++) {
+      this.ships[i].hits = 0;
+      this.ships[i].sunk = false;
+    }
+    
+  }
 }

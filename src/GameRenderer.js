@@ -14,27 +14,31 @@ export default class GameRenderer {
   constructor(mgr) {
     this.gameManager = mgr;
     this.manageButtons();
-  }
-
-  manageButtons() {
     this.player1Title = document.getElementById("player1Title");
     this.player2Title = document.getElementById("player2Title");
-
+  
     this.player1Alert = document.getElementById("player1Alert");
     this.player2Alert = document.getElementById("player2Alert");
     this.player1Alert.textContent = "It's you're turn!";
     this.player2Alert.textContent = "";
+    
+    this.player1BoardDiv = document.getElementById("gameBoard1");
+    this.player1BoardDiv.addEventListener('click', this.handlePlayerClick.bind(this));
+    this.player2BoardDiv = document.getElementById("gameBoard2");
+    this.player2BoardDiv.addEventListener('click', this.handlePlayerClick.bind(this));
+  
+    this.stats1 = document.getElementById("stats1");
+    this.stats2 = document.getElementById("stats2");
+  }    
 
+  manageButtons() {
     let player1Edit = document.getElementById("player1Edit");
     let player2Edit = document.getElementById("player2Edit");
     player1Edit.addEventListener("click", this.editPlayer.bind(this));
     player2Edit.addEventListener("click", this.editPlayer.bind(this));
 
-    this.player1BoardDiv = document.getElementById("gameBoard1");
-    this.player2BoardDiv = document.getElementById("gameBoard2");
-
-    this.stats1 = document.getElementById("stats1");
-    this.stats2 = document.getElementById("stats2");
+    let btnNewGame = document.getElementById("btnNewGame");
+    btnNewGame.addEventListener("click", this.newGame.bind(this));
   }
 
   editPlayer(event) {
@@ -53,9 +57,7 @@ export default class GameRenderer {
   handlePlayerClick(event) {
     // cell id looks like this: cell[6][8]
     const cell = event.target;
-    if (cell.classList.contains("gameBoard")) {
-      // skip it. Click event has the wrong target
-    } else {
+    if (cell.classList.contains("cell")) {
       const [row, col] = cell.id.match(/\d+/g).map(Number);
       // Save the active player so we can update the stats for that player:
       const lastPlayer = this.gameManager.currentPlayer;
@@ -69,7 +71,8 @@ export default class GameRenderer {
         cell.textContent = "-";
         this.adjustForCurrentPlayer();
       }
-      this.updatePlayerStats(lastPlayer);
+      this.updatePlayerStats(this.gameManager.player1);
+      this.updatePlayerStats(this.gameManager.player2);
     }
   }
 
@@ -132,10 +135,12 @@ export default class GameRenderer {
   }
 
   renderGameBoard(player) {
-    const gameBoard = player.gameBoard;
-    const boardID = "gameBoard" + player.id;
-    const divGameBoard = document.getElementById(boardID);
-    divGameBoard.addEventListener("click", this.handlePlayerClick.bind(this));
+    let divGameBoard;
+    if ( player.id === 1 ) {
+      divGameBoard = this.player1BoardDiv;
+    } else {
+      divGameBoard = this.player2BoardDiv;
+    }
     this.renderCells(player, divGameBoard);
   }
 
@@ -152,13 +157,31 @@ export default class GameRenderer {
     });
   }
 
-  updatePlayerStats(lastPlayer) {
+  updatePlayerStats(player) {
     let strStats =
-      "" + lastPlayer.hits + " hits, " + lastPlayer.misses + " misses";
-    if (lastPlayer === this.gameManager.player1) {
+      "" +
+      player.hits +
+      " hits, " +
+      player.misses +
+      " misses [" +
+      player.wins +
+      "-" +
+      player.losses +
+      "]";
+    if (player === this.gameManager.player1) {
       this.stats1.textContent = strStats;
     } else {
       this.stats2.textContent = strStats;
     }
   }
+
+  newGame() {
+    this.gameManager.newGame();
+    this.player1BoardDiv.replaceChildren(); 
+    this.player2BoardDiv.replaceChildren(); 
+    this.renderGameBoards();
+    this.player2BoardDiv.classList.remove("frozen");
+    this.player1BoardDiv.classList.add("frozen");
+  }
+
 }

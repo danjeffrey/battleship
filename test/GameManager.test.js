@@ -18,8 +18,8 @@ it("manager is ready", () => {
   expect(
     (() => {
       const mgr = new GameManager(
-        new Player(false, "Joe Schmoe"),
-        new Player(true, "BotMan"),
+        new Player(false, "Joe Schmoe", 1),
+        new Player(true, "BotMan", 2),
       );
       return mgr.isReady();
     })(),
@@ -29,9 +29,9 @@ it("manager is ready", () => {
 it("new Game with player boards", () => {
   expect(
     (() => {
-      const player1 = new Player(false, "Me");
+      const player1 = new Player(false, "Me", 1);
       player1.placeAllShips();
-      const player2 = new Player(true, "bot");
+      const player2 = new Player(true, "bot", 2);
       player2.placeAllShips();
       const mgr = new GameManager(player1, player2);
       return (

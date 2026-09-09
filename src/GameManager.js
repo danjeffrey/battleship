@@ -6,6 +6,7 @@ export default class GameManager {
   player1 = null;
   player2 = null;
   currentPlayer;
+  winningPlayer = null;
 
   constructor(plyr1, plyr2) {
     this.player1 = plyr1;
@@ -20,19 +21,26 @@ export default class GameManager {
   playerMove(row, col) {
     let result = "miss";
     let hit = false;
+    let activeBoard;
+    let weHaveAWinner = false;
 
     if (this.currentPlayer === this.player1) {
-      hit = this.player2.gameBoard.receiveAttack(row, col);
+      activeBoard = this.player2.gameBoard;
     } else {
-      hit = this.player1.gameBoard.receiveAttack(row, col);
+      activeBoard = this.player1.gameBoard;
     }
+    hit = activeBoard.receiveAttack(row, col);
     if (hit) {
       result = "hit";
       this.currentPlayer.hits += 1;
+      weHaveAWinner = activeBoard.allShipsSunk();
     } else {
       result = "miss";
       this.currentPlayer.misses += 1;
       this.changePlayers();
+    }
+    if ( weHaveAWinner ) {
+      this.winningPlayer = this.currentPlayer;
     }
     return result;
   }

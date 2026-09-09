@@ -7,10 +7,12 @@ export default class Player {
   gameBoard = new GameBoard();
   hits = 0;
   misses = 0;
+  id = 0;
 
-  constructor(isRobot, playerName) {
+  constructor(isRobot, playerName, id) {
     this.isBot = isRobot;
     this.name = playerName;
+    this.id = id;
   }
 
   placeAllShips() {

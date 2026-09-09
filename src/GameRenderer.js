@@ -59,16 +59,28 @@ export default class GameRenderer {
       const [row, col] = cell.id.match(/\d+/g).map(Number);
       // Save the active player so we can update the stats for that player:
       const lastPlayer = this.gameManager.currentPlayer;
-      // playerMove() changes the current player. 
+      // playerMove() changes the current player.
       let result = this.gameManager.playerMove(row, col);
       cell.classList.add(result);
       if (result === "hit") {
         cell.textContent = "X";
+        this.checkForWinner();
       } else {
         cell.textContent = "-";
         this.adjustForCurrentPlayer();
       }
       this.updatePlayerStats(lastPlayer);
+    }
+  }
+
+  checkForWinner() {
+    let result = false;
+    let winner = this.gameManager.winningPlayer;
+    if (winner != null) {
+      let divAlert = document.getElementById("player" + winner.id + "Alert");
+      divAlert.classList.add("winner");
+      divAlert.textContent = "Winner!";
+      // TODO: Freeze both boards
     }
   }
 
@@ -95,21 +107,18 @@ export default class GameRenderer {
   }
 
   renderGameBoards() {
-    this.renderPlayer(this.gameManager.player1, 1);
-    this.renderPlayer(this.gameManager.player2, 2);
+    this.renderPlayer(this.gameManager.player1);
+    this.renderPlayer(this.gameManager.player2);
   }
 
-  renderPlayer(player, order) {
-    if (order !== 1 && order !== 2) {
-      return;
-    }
-    this.renderPlayerHeader(player, order);
-    this.renderGameBoard(player, order);
+  renderPlayer(player) {
+    this.renderPlayerHeader(player);
+    this.renderGameBoard(player);
     this.updatePlayerStats(player);
   }
 
-  renderPlayerHeader(player, order) {
-    const titleID = "player" + order + "Title";
+  renderPlayerHeader(player) {
+    const titleID = "player" + player.id + "Title";
     const divPlayerTitle = document.getElementById(titleID);
     divPlayerTitle.textContent = player.name;
 
@@ -122,9 +131,9 @@ export default class GameRenderer {
     }
   }
 
-  renderGameBoard(player, order) {
+  renderGameBoard(player) {
     const gameBoard = player.gameBoard;
-    const boardID = "gameBoard" + order;
+    const boardID = "gameBoard" + player.id;
     const divGameBoard = document.getElementById(boardID);
     divGameBoard.addEventListener("click", this.handlePlayerClick.bind(this));
     this.renderCells(player, divGameBoard);

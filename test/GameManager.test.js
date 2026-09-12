@@ -20,6 +20,7 @@ it("manager is ready", () => {
       const mgr = new GameManager(
         new Player(false, "Joe Schmoe", 1),
         new Player(true, "BotMan", 2),
+        null
       );
       return mgr.isReady();
     })(),
@@ -33,7 +34,7 @@ it("new Game with player boards", () => {
       player1.placeAllShips();
       const player2 = new Player(true, "bot", 2);
       player2.placeAllShips();
-      const mgr = new GameManager(player1, player2);
+      const mgr = new GameManager(player1, player2, null);
       return (
         player1.gameBoard.receiveAttack(3, 1) &&
         player2.gameBoard.receiveAttack(3, 1)

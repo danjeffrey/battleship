@@ -7,9 +7,10 @@ export default class Player {
   gameBoard = new GameBoard();
   hits = 0;
   misses = 0;
-  id = 0;
   wins = 0;
   losses = 0;
+  id = 0;
+  hasWon = false;
 
   constructor(isRobot, playerName, id) {
     this.isBot = isRobot;
@@ -34,4 +35,11 @@ export default class Player {
     // Column 9
     this.gameBoard.placeShip(2, 1, 9, "V");
   }
+
+  editPlayer(event) {
+    const newValue = prompt("Enter a name:");
+    const btn = event.target;
+    this.name = newValue;
+  }
+
 }

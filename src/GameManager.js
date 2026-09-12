@@ -1,17 +1,20 @@
 // GameManager.js
 
-import Player from "./Player.js";
+import GameRenderer from "./GameRenderer.js";
 
 export default class GameManager {
   player1 = null;
   player2 = null;
   currentPlayer;
-  winningPlayer = null;
+  gameRenderer;
+  weHaveAWinner = false;
 
-  constructor(plyr1, plyr2) {
+  constructor(plyr1, plyr2, renderer) {
     this.player1 = plyr1;
     this.player2 = plyr2;
     this.currentPlayer = this.player1;
+    this.gameRenderer = renderer;
+    renderer.gameManager = this;
   }
 
   isReady() {
@@ -22,9 +25,9 @@ export default class GameManager {
     let result = "miss";
     let hit = false;
     let activeBoard;
-    let weHaveAWinner = false;
+    this.weHaveAWinner = false;
 
-    if (this.currentPlayer === this.player1) {
+    if (this.currentPlayer.id === 1) {
       activeBoard = this.player2.gameBoard;
     } else {
       activeBoard = this.player1.gameBoard;
@@ -33,22 +36,22 @@ export default class GameManager {
     if (hit) {
       result = "hit";
       this.currentPlayer.hits += 1;
-      weHaveAWinner = activeBoard.allShipsSunk();
+      this.weHaveAWinner = activeBoard.allShipsSunk();
     } else {
       result = "miss";
       this.currentPlayer.misses += 1;
       this.changePlayers();
     }
-    if (weHaveAWinner) {
-      this.winningPlayer = this.currentPlayer;
-      this.winningPlayer.wins += 1;
-      if (this.winningPlayer === this.player1) {
+    if (this.weHaveAWinner) {
+      this.currentPlayer.hasWon = true;
+      this.currentPlayer.wins += 1;
+      if (this.currentPlayer === this.player1) {
         this.player2.losses += 1;
       } else {
         this.player1.losses += 1;
       }
     }
-    return result;
+    this.gameRenderer.renderGame();
   }
 
   changePlayers() {
@@ -59,7 +62,6 @@ export default class GameManager {
   newGame() {
     // Clear out hits, misses, etc.
     this.currentPlayer = this.player1;
-    this.winningPlayer = null;
 
     this.player1.hits = 0;
     this.player1.misses = 0;
@@ -68,5 +70,7 @@ export default class GameManager {
     this.player2.hits = 0;
     this.player2.misses = 0;
     this.player2.gameBoard.clear();
+
+    this.gameRenderer.renderGame();
   }
 }

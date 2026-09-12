@@ -32,6 +32,16 @@ it("new Player id is 2", () => {
   expect(new Player(true, "Joe Schmoe", 2).id).toBe(2);
 });
 
+it("Player has won", () => {
+  expect(
+    (() => {
+      const player = new Player(false, "Me", 1);
+      player.hasWon = true;
+      return player.hasWon;
+    })(),
+  ).toBe(true);
+});
+
 
 
 

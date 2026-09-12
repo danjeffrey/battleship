@@ -1,4 +1,4 @@
-// GameBoard.js
+// GameBoard.test.js
 "use strict";
 import Ship from "./Ship.js";
 
@@ -7,7 +7,8 @@ export default class GameBoard {
   cols = [...Array(10)].map((_, i) => i + 1); // 1–10
   grid = {};
   ships = []; // a list of ship instances
-  missedAttacks = [];
+  hits = [];
+  misses = [];
 
   constructor() {
     for (const r of this.rows) {
@@ -42,8 +43,9 @@ export default class GameBoard {
         this.ships[idx].hit();
         result = true;
       }
+      this.hits.push({ row, col });
     } else {
-      this.missedAttacks.push({ row, col });
+      this.misses.push({ row, col });
     }
     return result;
   }
@@ -61,7 +63,8 @@ export default class GameBoard {
     for (let i = 0; i < this.ships.length; i++) {
       this.ships[i].hits = 0;
       this.ships[i].sunk = false;
-    }
-    
+    }    
+    this.hits = [];
+    this.misses = [];
   }
 }

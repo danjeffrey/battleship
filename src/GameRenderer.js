@@ -2,122 +2,58 @@
 
 export default class GameRenderer {
   gameManager;
-  player1Title;
-  player2Title;
-  player1Alert;
-  player2Alert;
-  player1BoardDiv;
-  player2BoardDiv;
-  stats1;
-  stats2;
+  playerTitles = [];
+  playerAlerts = [];
+  playerBoardDivs = [];
+  stats = [];
 
-  constructor(mgr) {
-    this.gameManager = mgr;
-    this.manageButtons();
-    this.player1Title = document.getElementById("player1Title");
-    this.player2Title = document.getElementById("player2Title");
-  
-    this.player1Alert = document.getElementById("player1Alert");
-    this.player2Alert = document.getElementById("player2Alert");
-    this.player1Alert.textContent = "It's you're turn!";
-    this.player2Alert.textContent = "";
-    
-    this.player1BoardDiv = document.getElementById("gameBoard1");
-    this.player1BoardDiv.addEventListener('click', this.handlePlayerClick.bind(this));
-    this.player2BoardDiv = document.getElementById("gameBoard2");
-    this.player2BoardDiv.addEventListener('click', this.handlePlayerClick.bind(this));
-  
-    this.stats1 = document.getElementById("stats1");
-    this.stats2 = document.getElementById("stats2");
-  }    
+  constructor() {
+    this.setUpButtons();
+    this.playerTitles[0] = document.getElementById("player1Title");
+    this.playerTitles[1] = document.getElementById("player2Title");
 
-  manageButtons() {
+    this.playerAlerts[0] = document.getElementById("player1Alert");
+    this.playerAlerts[1] = document.getElementById("player2Alert");
+
+    this.playerBoardDivs[0] = document.getElementById("gameBoard1");
+    this.playerBoardDivs[0].addEventListener(
+      "click",
+      this.handlePlayerClick.bind(this),
+    );
+    this.playerBoardDivs[1] = document.getElementById("gameBoard2");
+    this.playerBoardDivs[1].addEventListener(
+      "click",
+      this.handlePlayerClick.bind(this),
+    );
+
+    this.stats[0] = document.getElementById("stats1");
+    this.stats[1] = document.getElementById("stats2");
+  }
+
+  setUpButtons() {
     let player1Edit = document.getElementById("player1Edit");
+    player1Edit.addEventListener("click", player1.editPlayer);
     let player2Edit = document.getElementById("player2Edit");
-    player1Edit.addEventListener("click", this.editPlayer.bind(this));
-    player2Edit.addEventListener("click", this.editPlayer.bind(this));
+    player2Edit.addEventListener("click", player2.editPlayer);
 
     let btnNewGame = document.getElementById("btnNewGame");
     btnNewGame.addEventListener("click", this.newGame.bind(this));
   }
 
-  editPlayer(event) {
-    const newValue = prompt("Enter a name:");
-    console.log("You entered:", newValue);
-    const btn = event.target;
-    if (btn.id.includes("1")) {
-      this.gameManager.player1.name = newValue;
-      this.player1Title.textContent = newValue;
-    } else {
-      this.gameManager.player2.name = newValue;
-      this.player2Title.textContent = newValue;
-    }
-  }
+  renderGame() {
+    this.playerAlerts[0].textContent = "";
+    this.playerAlerts[1].textContent = "";
 
-  handlePlayerClick(event) {
-    // cell id looks like this: cell[6][8]
-    const cell = event.target;
-    if (cell.classList.contains("cell")) {
-      const [row, col] = cell.id.match(/\d+/g).map(Number);
-      // Save the active player so we can update the stats for that player:
-      const lastPlayer = this.gameManager.currentPlayer;
-      // playerMove() changes the current player.
-      let result = this.gameManager.playerMove(row, col);
-      cell.classList.add(result);
-      if (result === "hit") {
-        cell.textContent = "X";
-        this.checkForWinner();
-      } else {
-        cell.textContent = "-";
-        this.adjustForCurrentPlayer();
-      }
-      this.updatePlayerStats(this.gameManager.player1);
-      this.updatePlayerStats(this.gameManager.player2);
-    }
-  }
-
-  checkForWinner() {
-    let result = false;
-    let winner = this.gameManager.winningPlayer;
-    if (winner != null) {
-      let divAlert = document.getElementById("player" + winner.id + "Alert");
-      divAlert.classList.add("winner");
-      divAlert.textContent = "Winner!";
-      // TODO: Freeze both boards
-    }
-  }
-
-  adjustForCurrentPlayer(player) {
-    if (this.gameManager.currentPlayer === this.gameManager.player1) {
-      this.player1Alert.textContent = "Your turn!";
-      this.player2Alert.textContent = "";
-      if (this.player2BoardDiv.classList.contains("frozen")) {
-        this.player2BoardDiv.classList.remove("frozen");
-      }
-      if (!this.player1BoardDiv.classList.contains("frozen")) {
-        this.player1BoardDiv.classList.add("frozen");
-      }
-    } else {
-      this.player1Alert.textContent = "";
-      this.player2Alert.textContent = "Your turn!";
-      if (this.player1BoardDiv.classList.contains("frozen")) {
-        this.player1BoardDiv.classList.remove("frozen");
-      }
-      if (!this.player2BoardDiv.classList.contains("frozen")) {
-        this.player2BoardDiv.classList.add("frozen");
-      }
-    }
-  }
-
-  renderGameBoards() {
     this.renderPlayer(this.gameManager.player1);
     this.renderPlayer(this.gameManager.player2);
+
+    this.renderWhoseTurn();
   }
 
   renderPlayer(player) {
-    this.renderPlayerHeader(player);
     this.renderGameBoard(player);
-    this.updatePlayerStats(player);
+    this.renderPlayerHeader(player);
+    this.renderPlayerStats(player);
   }
 
   renderPlayerHeader(player) {
@@ -125,39 +61,54 @@ export default class GameRenderer {
     const divPlayerTitle = document.getElementById(titleID);
     divPlayerTitle.textContent = player.name;
 
-    if (this.gameManager.currentPlayer === this.gameManager.player1) {
-      this.player1Alert.textContent = "Your turn!";
-      this.player2Alert.textContent = "";
-    } else {
-      this.player1Alert.textContent = "";
-      this.player2Alert.textContent = "Your turn!";
+    if (player.hasWon) {
+      if (player.id === 1) {
+        this.playerAlerts[0].textContent = "Winner!";
+      } else {
+        this.playerAlerts[1].textContent = "Winner!";
+      }
     }
   }
 
   renderGameBoard(player) {
     let divGameBoard;
-    if ( player.id === 1 ) {
-      divGameBoard = this.player1BoardDiv;
-    } else {
-      divGameBoard = this.player2BoardDiv;
-    }
+    divGameBoard = this.playerBoardDivs[player.id - 1];
     this.renderCells(player, divGameBoard);
   }
 
-  renderCells(player, div) {
+  renderCells(player, divBoard) {
+    // Clear the board first:
+    divBoard.innerHTML = "";
     const gameBoard = player.gameBoard;
+    const hitSet = new Set(gameBoard.hits.map((h) => `${h.row},${h.col}`));
+    const missSet = new Set(gameBoard.misses.map((h) => `${h.row},${h.col}`));
     gameBoard.rows.forEach(function (row) {
       gameBoard.cols.forEach(function (col) {
         //console.log("row: " + row + "   col: " + col);
         const cell = document.createElement("div");
-        div.appendChild(cell);
+        divBoard.appendChild(cell);
         cell.id = "cell[" + row + "][" + col + "]";
         cell.classList.add("cell");
+        const key = `${row},${col}`;
+        if (row === 1 && col === 1) {
+          console.log("gameBoard.hits[0] for " + player.name + ":");
+          console.log(gameBoard.hits[0]);
+          console.log("{ row, col }: ");
+          console.log({ row, col });
+          console.log(hitSet.has(key));
+        }
+        if (hitSet.has(key)) {
+          cell.textContent = "X";
+          cell.classList.add("hit");
+        } else if (missSet.has(key)) {
+          cell.textContent = "-";
+          cell.classList.add("miss");
+        }
       });
     });
   }
 
-  updatePlayerStats(player) {
+  renderPlayerStats(player) {
     let strStats =
       "" +
       player.hits +
@@ -168,20 +119,52 @@ export default class GameRenderer {
       "-" +
       player.losses +
       "]";
-    if (player === this.gameManager.player1) {
-      this.stats1.textContent = strStats;
+    if (player.id === 1) {
+      this.stats[0].textContent = strStats;
     } else {
-      this.stats2.textContent = strStats;
+      this.stats[1].textContent = strStats;
+    }
+  }
+
+  renderWhoseTurn() {
+    if (!this.gameManager.weHaveAWinner) {
+      // Who's turn is it?
+      if (this.gameManager.currentPlayer === this.gameManager.player1) {
+        this.playerAlerts[0].textContent = "Your turn!";
+        if (this.playerBoardDivs[1].classList.contains("frozen")) {
+          this.playerBoardDivs[1].classList.remove("frozen");
+        }
+        if (!this.playerBoardDivs[0].classList.contains("frozen")) {
+          this.playerBoardDivs[0].classList.add("frozen");
+        }
+      } else {
+        this.playerAlerts[1].textContent = "Your turn!";
+        if (this.playerBoardDivs[0].classList.contains("frozen")) {
+          this.playerBoardDivs[0].classList.remove("frozen");
+        }
+        if (!this.playerBoardDivs[1].classList.contains("frozen")) {
+          this.playerBoardDivs[1].classList.add("frozen");
+        }
+      }
+    }
+  }
+
+  handlePlayerClick(event) {
+    if (!this.gameManager.weHaveAWinner) {
+      // cell id looks like this: cell[6][8]
+      const cell = event.target;
+      if (cell.classList.contains("cell")) {
+        const [row, col] = cell.id.match(/\d+/g).map(Number);
+        // Note that playerMove() changes the current player:
+        this.gameManager.playerMove(row, col);
+      }
     }
   }
 
   newGame() {
     this.gameManager.newGame();
-    this.player1BoardDiv.replaceChildren(); 
-    this.player2BoardDiv.replaceChildren(); 
-    this.renderGameBoards();
-    this.player2BoardDiv.classList.remove("frozen");
-    this.player1BoardDiv.classList.add("frozen");
+    this.renderGame();
+    this.playerBoardDivs[1].classList.remove("frozen");
+    this.playerBoardDivs[0].classList.add("frozen");
   }
-
 }

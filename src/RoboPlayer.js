@@ -13,7 +13,8 @@ export default class RoboPlayer {
 
     makeAMove() {
         let [x, y] = this.pickACell();
-        this.gameManager.playerMove(row, col);
+        let result = this.gameManager.playerMove(row, col);
+        return result;
     }
 
     pickACell() {
@@ -27,7 +28,5 @@ export default class RoboPlayer {
         this.history.push(result);
         return(result);
     }
-
-
 
 }

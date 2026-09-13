@@ -7,8 +7,11 @@ export default class GameRenderer {
   playerBoardDivs = [];
   stats = [];
 
-  constructor() {
+  constructor(gameMgr) {
+    this.gameManager = gameMgr;
+
     this.setUpButtons();
+
     this.playerTitles[0] = document.getElementById("player1Title");
     this.playerTitles[1] = document.getElementById("player2Title");
 
@@ -35,6 +38,9 @@ export default class GameRenderer {
     player1Edit.addEventListener("click", player1.editPlayer);
     let player2Edit = document.getElementById("player2Edit");
     player2Edit.addEventListener("click", player2.editPlayer);
+
+    //let player2Go = document.getElementById("player2Go");
+    //player2Go.addEventListener("click", todo);
 
     let btnNewGame = document.getElementById("btnNewGame");
     btnNewGame.addEventListener("click", this.newGame.bind(this));
@@ -157,12 +163,13 @@ export default class GameRenderer {
         const [row, col] = cell.id.match(/\d+/g).map(Number);
         // Note that playerMove() changes the current player:
         this.gameManager.playerMove(row, col);
+        this.renderGame();
       }
     }
   }
 
   newGame() {
-    this.gameManager.newGame();
+    this.gameManager.newGame();    
     this.renderGame();
     this.playerBoardDivs[1].classList.remove("frozen");
     this.playerBoardDivs[0].classList.add("frozen");

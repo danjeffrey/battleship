@@ -6,15 +6,12 @@ export default class GameManager {
   player1 = null;
   player2 = null;
   currentPlayer;
-  gameRenderer;
   weHaveAWinner = false;
 
-  constructor(plyr1, plyr2, renderer) {
+  constructor(plyr1, plyr2) {
     this.player1 = plyr1;
     this.player2 = plyr2;
     this.currentPlayer = this.player1;
-    this.gameRenderer = renderer;
-    renderer.gameManager = this;
   }
 
   isReady() {
@@ -51,12 +48,15 @@ export default class GameManager {
         this.player1.losses += 1;
       }
     }
-    this.gameRenderer.renderGame();
+    return result;
   }
 
   changePlayers() {
     this.currentPlayer =
       this.currentPlayer === this.player1 ? this.player2 : this.player1;
+    if (this.currentPlayer.isBot) {
+      this.currentPlayer.roboPlayer.makeAMove();
+    }
   }
 
   newGame() {
@@ -70,7 +70,5 @@ export default class GameManager {
     this.player2.hits = 0;
     this.player2.misses = 0;
     this.player2.gameBoard.clear();
-
-    this.gameRenderer.renderGame();
   }
 }

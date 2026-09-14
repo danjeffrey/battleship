@@ -1,7 +1,5 @@
 // GameModel.js
 
-import GameView from "./GameView.js";
-
 export default class GameModel {
   player1 = null;
   player2 = null;
@@ -18,26 +16,22 @@ export default class GameModel {
     return this.player1 !== null && this.player2 !== null;
   }
 
-  playerMove(row, col) {
-    let result = "miss";
-    let hit = false;
-    let activeBoard;
-    this.weHaveAWinner = false;
-
+  getActiveBoard() {
+    let activeBoard = this.player1.gameBoard;
     if (this.currentPlayer.id === 1) {
       activeBoard = this.player2.gameBoard;
-    } else {
-      activeBoard = this.player1.gameBoard;
     }
-    hit = activeBoard.receiveAttack(row, col);
+    return activeBoard;
+  }
+
+  processHitOrMiss(board, hit) {
+    let result = "miss";
     if (hit) {
       result = "hit";
       this.currentPlayer.hits += 1;
-      this.weHaveAWinner = activeBoard.allShipsSunk();
+      this.weHaveAWinner = board.allShipsSunk();
     } else {
-      result = "miss";
       this.currentPlayer.misses += 1;
-      this.changePlayers();
     }
     if (this.weHaveAWinner) {
       this.currentPlayer.hasWon = true;
@@ -54,12 +48,9 @@ export default class GameModel {
   changePlayers() {
     this.currentPlayer =
       this.currentPlayer === this.player1 ? this.player2 : this.player1;
-    // if (this.currentPlayer.isBot) {
-    //   this.currentPlayer.roboPlayer.makeAMove();
-    // }
   }
 
-  newGame() {
+  resetGame() {
     // Clear out hits, misses, etc.
     this.currentPlayer = this.player1;
 

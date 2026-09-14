@@ -1,16 +1,14 @@
 // GameView.js
 
 export default class GameView {
-  gameModel;
+  model;
   playerTitles = [];
   playerAlerts = [];
   playerBoardDivs = [];
   stats = [];
 
-  constructor(model) {
-    this.gameModel = model;
-
-    this.setUpButtons();
+  constructor(mdl) {
+    this.model = mdl;
 
     this.playerTitles[0] = document.getElementById("player1Title");
     this.playerTitles[1] = document.getElementById("player2Title");
@@ -19,39 +17,18 @@ export default class GameView {
     this.playerAlerts[1] = document.getElementById("player2Alert");
 
     this.playerBoardDivs[0] = document.getElementById("gameBoard1");
-    this.playerBoardDivs[0].addEventListener(
-      "click",
-      this.handlePlayerClick.bind(this),
-    );
     this.playerBoardDivs[1] = document.getElementById("gameBoard2");
-    this.playerBoardDivs[1].addEventListener(
-      "click",
-      this.handlePlayerClick.bind(this),
-    );
 
     this.stats[0] = document.getElementById("stats1");
     this.stats[1] = document.getElementById("stats2");
-  }
-
-  setUpButtons() {
-    let player1Edit = document.getElementById("player1Edit");
-    player1Edit.addEventListener("click", player1.editPlayer);
-    let player2Edit = document.getElementById("player2Edit");
-    player2Edit.addEventListener("click", player2.editPlayer);
-
-    //let player2Go = document.getElementById("player2Go");
-    //player2Go.addEventListener("click", todo);
-
-    let btnNewGame = document.getElementById("btnNewGame");
-    btnNewGame.addEventListener("click", this.newGame.bind(this));
   }
 
   renderGame() {
     this.playerAlerts[0].textContent = "";
     this.playerAlerts[1].textContent = "";
 
-    this.renderPlayer(this.gameModel.player1);
-    this.renderPlayer(this.gameModel.player2);
+    this.renderPlayer(this.model.player1);
+    this.renderPlayer(this.model.player2);
 
     this.renderWhoseTurn();
   }
@@ -133,9 +110,9 @@ export default class GameView {
   }
 
   renderWhoseTurn() {
-    if (!this.gameModel.weHaveAWinner) {
+    if (!this.model.weHaveAWinner) {
       // Who's turn is it?
-      if (this.gameModel.currentPlayer === this.gameModel.player1) {
+      if (this.model.currentPlayer === this.model.player1) {
         this.playerAlerts[0].textContent = "Your turn!";
         if (this.playerBoardDivs[1].classList.contains("frozen")) {
           this.playerBoardDivs[1].classList.remove("frozen");
@@ -155,23 +132,4 @@ export default class GameView {
     }
   }
 
-  handlePlayerClick(event) {
-    if (!this.gameModel.weHaveAWinner) {
-      // cell id looks like this: cell[6][8]
-      const cell = event.target;
-      if (cell.classList.contains("cell")) {
-        const [row, col] = cell.id.match(/\d+/g).map(Number);
-        // Note that playerMove() changes the current player:
-        this.gameModel.playerMove(row, col);
-        this.renderGame();
-      }
-    }
-  }
-
-  newGame() {
-    this.gameModel.newGame();    
-    this.renderGame();
-    this.playerBoardDivs[1].classList.remove("frozen");
-    this.playerBoardDivs[0].classList.add("frozen");
-  }
 }

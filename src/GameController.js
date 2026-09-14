@@ -1,10 +1,14 @@
 // GameController.js
 
+import RoboPlayer from "./RoboPlayer.js";
+
 export default class GameController {
   model;
   view;
   boardDivPlayer1;
   boardDivPlayer2;
+  roboPlayer1 = null;
+  roboPlayer2 = null;
 
   constructor(gameModel, gameView) {
     this.model = gameModel;
@@ -20,18 +24,25 @@ export default class GameController {
       "click",
       this.handlePlayerClick.bind(this)
     );
+    
+    if ( this.model.player1.isBot ) {
+      this.roboPlayer1 = new RoboPlayer(this);
+    } else if ( this.model.player2.isBot ) {
+      this.roboPlayer2 = new RoboPlayer(this);
+    }
 
     this.setUpButtons();
   }
 
   setUpButtons() {
     let player1Edit = document.getElementById("player1Edit");
-    player1Edit.addEventListener("click", player1.editPlayer);
+    player1Edit.addEventListener("click", this.model.player1.editPlayer);
+    
     let player2Edit = document.getElementById("player2Edit");
-    player2Edit.addEventListener("click", player2.editPlayer);
+    player2Edit.addEventListener("click", this.model.player2.editPlayer);
 
-    //let player2Go = document.getElementById("player2Go");
-    //player2Go.addEventListener("click", todo);
+    let player2Go = document.getElementById("player2Go");
+    player2Go.addEventListener("click", this.roboPlayer2.makeAMove);
 
     let btnNewGame = document.getElementById("btnNewGame");
     btnNewGame.addEventListener("click", this.newGame);

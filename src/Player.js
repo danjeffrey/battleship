@@ -12,13 +12,9 @@ export default class Player {
   losses = 0;
   id = 0;
   hasWon = false;
-  roboPlayer = null;
 
   constructor(isRobot, playerName, id) {
     this.isBot = isRobot;
-    if ( this.isBot ) {
-      this.roboPlayer = new RoboPlayer();
-    }
     this.name = playerName;
     this.id = id;
   }

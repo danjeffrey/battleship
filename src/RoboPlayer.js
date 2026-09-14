@@ -4,30 +4,36 @@ import GameModel from "./GameModel.js";
 import Player from "./Player.js";
 
 export default class RoboPlayer {
-    history = [];
-    gameModel;
+  history = [];
+  controller;
 
-    constructor(model) {
-        this.gameModel = model;        
-    }
+  constructor(ctrl) {
+    this.controller = ctrl;
+    this.makeAMove = this.makeAMove.bind(this);    
+  }
 
-    makeAMove() {
-        let [row, col] = this.pickACell();
-        let result = this.gameModel.playerMove(row, col);
-        return result;
-    }
+  makeAMove() {
+    let [row, col] = this.pickACell();
+    console.log("" + row + ", " + col);
+    let result = this.controller.playerMove(row, col);
+    return result;
+  }
 
-    pickACell() {
-        let result = [1, 1];
-        // Randomly pick a cell that has not been picked before. 
-        do {
-            let row = Math.floor(Math.random() * 10) + 1;
-            let col = Math.floor(Math.random() * 10) + 1
-            result = [row, col];
-        } while ( this.history.includes(result) );
-        this.history.push(result);
-        return(result);
-    }
+  test() {
+    return 23;
+  }
 
+  pickACell() {
+    let row = Math.floor(Math.random() * 10) + 1;
+    let col = Math.floor(Math.random() * 10) + 1;
+    let result = [row, col];
+    // Randomly pick a cell that has not been picked before.
+    while (this.history.some(([r, c]) => r === row && c === col)) {
+      row = Math.floor(Math.random() * 10) + 1;
+      col = Math.floor(Math.random() * 10) + 1;
+      result = [row, col];
+    } 
+    this.history.push(result);
+    return result;
+  }
 }
-

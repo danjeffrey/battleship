@@ -1,14 +1,14 @@
-// GameRenderer.js
+// GameView.js
 
-export default class GameRenderer {
-  gameManager;
+export default class GameView {
+  gameModel;
   playerTitles = [];
   playerAlerts = [];
   playerBoardDivs = [];
   stats = [];
 
-  constructor(gameMgr) {
-    this.gameManager = gameMgr;
+  constructor(model) {
+    this.gameModel = model;
 
     this.setUpButtons();
 
@@ -50,8 +50,8 @@ export default class GameRenderer {
     this.playerAlerts[0].textContent = "";
     this.playerAlerts[1].textContent = "";
 
-    this.renderPlayer(this.gameManager.player1);
-    this.renderPlayer(this.gameManager.player2);
+    this.renderPlayer(this.gameModel.player1);
+    this.renderPlayer(this.gameModel.player2);
 
     this.renderWhoseTurn();
   }
@@ -133,9 +133,9 @@ export default class GameRenderer {
   }
 
   renderWhoseTurn() {
-    if (!this.gameManager.weHaveAWinner) {
+    if (!this.gameModel.weHaveAWinner) {
       // Who's turn is it?
-      if (this.gameManager.currentPlayer === this.gameManager.player1) {
+      if (this.gameModel.currentPlayer === this.gameModel.player1) {
         this.playerAlerts[0].textContent = "Your turn!";
         if (this.playerBoardDivs[1].classList.contains("frozen")) {
           this.playerBoardDivs[1].classList.remove("frozen");
@@ -156,20 +156,20 @@ export default class GameRenderer {
   }
 
   handlePlayerClick(event) {
-    if (!this.gameManager.weHaveAWinner) {
+    if (!this.gameModel.weHaveAWinner) {
       // cell id looks like this: cell[6][8]
       const cell = event.target;
       if (cell.classList.contains("cell")) {
         const [row, col] = cell.id.match(/\d+/g).map(Number);
         // Note that playerMove() changes the current player:
-        this.gameManager.playerMove(row, col);
+        this.gameModel.playerMove(row, col);
         this.renderGame();
       }
     }
   }
 
   newGame() {
-    this.gameManager.newGame();    
+    this.gameModel.newGame();    
     this.renderGame();
     this.playerBoardDivs[1].classList.remove("frozen");
     this.playerBoardDivs[0].classList.add("frozen");

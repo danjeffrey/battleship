@@ -1,19 +1,19 @@
 // RoboPlayer.js
 
-import GameManager from "./GameManager.js";
+import GameModel from "./GameModel.js";
 import Player from "./Player.js";
 
 export default class RoboPlayer {
     history = [];
-    gameManager;
+    gameModel;
 
-    constructor(gameMgr) {
-        this.gameManager = gameMgr;        
+    constructor(model) {
+        this.gameModel = model;        
     }
 
     makeAMove() {
-        let [x, y] = this.pickACell();
-        let result = this.gameManager.playerMove(row, col);
+        let [row, col] = this.pickACell();
+        let result = this.gameModel.playerMove(row, col);
         return result;
     }
 
@@ -30,3 +30,4 @@ export default class RoboPlayer {
     }
 
 }
+

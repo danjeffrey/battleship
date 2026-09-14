@@ -2,8 +2,8 @@
 
 "use strict";
 import RoboPlayer from "../src/RoboPlayer.js";
-import GameManager from "../src/GameManager.js";
-import GameRenderer from "../src/GameRenderer.js";
+import GameModel from "../src/GameModel.js";
+import GameView from "../src/GameView.js";
 import Player from "../src/Player.js";
 
 it("Place holder", () => {
@@ -12,10 +12,9 @@ it("Place holder", () => {
 
 test("returns one of two valid values", () => {
   const robo = new RoboPlayer(
-    new GameManager(
+    new GameModel(
       new Player("Human", false, 1),
-      new Player("Bot", true, 2),
-      new GameRenderer()
+      new Player("Bot", true, 2)
     ),
   );
   result = robo.makeAMove();

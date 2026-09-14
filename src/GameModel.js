@@ -1,8 +1,8 @@
-// GameManager.js
+// GameModel.js
 
-import GameRenderer from "./GameRenderer.js";
+import GameView from "./GameView.js";
 
-export default class GameManager {
+export default class GameModel {
   player1 = null;
   player2 = null;
   currentPlayer;
@@ -54,9 +54,9 @@ export default class GameManager {
   changePlayers() {
     this.currentPlayer =
       this.currentPlayer === this.player1 ? this.player2 : this.player1;
-    if (this.currentPlayer.isBot) {
-      this.currentPlayer.roboPlayer.makeAMove();
-    }
+    // if (this.currentPlayer.isBot) {
+    //   this.currentPlayer.roboPlayer.makeAMove();
+    // }
   }
 
   newGame() {

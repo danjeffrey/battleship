@@ -42,9 +42,6 @@ export default class GameController {
     let player2Edit = document.getElementById("player2Edit");
     player2Edit.addEventListener("click", this.model.player2.editPlayer);
 
-    // let player2Go = document.getElementById("player2Go");
-    // player2Go.addEventListener("click", this.roboPlayer.makeAMove);
-
     let btnNewGame = document.getElementById("btnNewGame");
     btnNewGame.addEventListener("click", this.newGame);
   }

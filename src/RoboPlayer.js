@@ -10,6 +10,7 @@ export default class RoboPlayer {
 
   constructor(idx, ctrl) {
     this.controller = ctrl;
+    // This is needed because a listener calls it from another class
     this.makeAMove = this.makeAMove.bind(this);
     this.id = idx;
   }

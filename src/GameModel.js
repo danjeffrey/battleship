@@ -13,7 +13,7 @@ export default class GameModel {
   }
 
   isReady() {
-    return this.player1 !== null && this.player2 !== null;
+    return this.player1 !== null && this.player1.isReady() && this.player2 !== null && this.player2.isReady();
   }
 
   getActiveBoard() {

@@ -43,4 +43,8 @@ export default class Player {
     this.name = newValue;
   }
 
+  isReady() {
+    return this.gameBoard.isReady();
+  }
+
 }

@@ -3,12 +3,12 @@
 
 export default class Ship {
     id;
-    length;
+    size;
     hits = 0;
     sunk = false;
 
     constructor(len) {
-        this.length = len;
+        this.size = len;
     }
 
     hit() {
@@ -17,7 +17,7 @@ export default class Ship {
     }
 
     isSunk() {
-        if ( this.hits >= this.length ) {
+        if ( this.hits >= this.size ) {
             this.sunk = true;
         }
         return this.sunk;

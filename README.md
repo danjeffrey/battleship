@@ -7,6 +7,6 @@ x. Redo renderer to not alter html content except in the "render...()" methods.
    commented lines in gameView.js
 x. Rearrange boards so it's like the real battleship
 x. Add a controller to make it MVC? - Issue is this: How will the bot player initiate a move?  
-1. Automate the bot opponent
-2. Enable two-player mode 
+x. Automate the bot opponent
+2. Enable two-player mode
 3. Enable users to place ships

@@ -17,11 +17,11 @@ it("receiveAttack() hit", () => {
 it("manager is ready", () => {
   expect(
     (() => {
-      const mgr = new GameModel(
-        new Player(false, "Joe Schmoe", 1),
-        new Player(true, "BotMan", 2),
-        null
-      );
+      let plyr1 = new Player(false, "Joe Schmoe", 1);
+      plyr1.placeAllShips();
+      let plyr2 = new Player(true, "BotMan", 2);
+      plyr2.placeAllShips();
+      const mgr = new GameModel(plyr1, plyr2);
       return mgr.isReady();
     })(),
   ).toBe(true);

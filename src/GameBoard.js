@@ -19,12 +19,12 @@ export default class GameBoard {
     }
   }
 
-  placeShip(length, row, col, direction) {
-    const ship = new Ship(length);
+  placeShip(size, row, col, direction) {
+    const ship = new Ship(size);
     this.ships.push(ship);
     let idx = this.ships.length - 1;
     this.grid[row][col] = idx;
-    for (let step = 1; step < length; step++) {
+    for (let step = 1; step < size; step++) {
       if (direction === "V") {
         this.grid[row + step][col] = idx;
       } else if (direction === "H") {
@@ -66,5 +66,39 @@ export default class GameBoard {
     }    
     this.hits = [];
     this.misses = [];
+  }
+
+  isReady() {
+    let ones = 0;
+    let twos = 0;
+    let threes = 0;
+    let fours = 0;
+    //console.log(this.ships.length);
+    if ( this.ships.length != 10 ) {
+      return false;
+    }
+    for (let i = 0; i < this.ships.length; i++) {
+      switch ( this.ships[i].size ) {
+        case 1:
+          ones++;
+          break;
+        case 2:
+          twos++;
+          break;
+        case 3:
+          threes++;
+          break;
+        case 4:
+          fours++;
+          break;
+        default:
+          // NOOP
+      }      
+    }
+    //console.log("" + ones + ", " + twos + ", " + threes + ", " + fours);
+    if ( ones != 4 || twos != 3 || threes != 2 || fours != 1 ) {
+      return false;
+    }
+    return true;
   }
 }

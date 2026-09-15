@@ -42,6 +42,21 @@ it("Player has won", () => {
   ).toBe(true);
 });
 
+it("Player is not ready", () => {
+  expect(new Player(false, "Joe Schmoe", 1).isReady()).toBe(false);
+});
+
+it("Player is not ready", () => {
+  expect(
+    (() => {
+      const player = new Player(false, "Me", 1);
+      player.placeAllShips();
+      return player.isReady();
+    })(),
+  ).toBe(true);
+});
+
+
 
 
 

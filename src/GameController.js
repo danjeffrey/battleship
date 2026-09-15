@@ -7,8 +7,7 @@ export default class GameController {
   view;
   boardDivPlayer1;
   boardDivPlayer2;
-  roboPlayer1 = null;
-  roboPlayer2 = null;
+  roboPlayer = null;
 
   constructor(gameModel, gameView) {
     this.model = gameModel;
@@ -17,32 +16,34 @@ export default class GameController {
     this.boardDivPlayer1 = document.getElementById("gameBoard1");
     this.boardDivPlayer1.addEventListener(
       "click",
-      this.handlePlayerClick.bind(this)
+      this.handlePlayerClick.bind(this),
     );
     this.boardDivPlayer2 = document.getElementById("gameBoard2");
     this.boardDivPlayer2.addEventListener(
       "click",
-      this.handlePlayerClick.bind(this)
+      this.handlePlayerClick.bind(this),
     );
-    
-    if ( this.model.player1.isBot ) {
-      this.roboPlayer1 = new RoboPlayer(this);
-    } else if ( this.model.player2.isBot ) {
-      this.roboPlayer2 = new RoboPlayer(this);
+
+    if (this.model.player1.isBot) {
+      this.roboPlayer = new RoboPlayer(1, this);
+    } else if (this.model.player2.isBot) {
+      this.roboPlayer = new RoboPlayer(2, this);
     }
 
     this.setUpButtons();
+
+    document.addEventListener("makeAnotherMove", this.roboMove.bind(this));
   }
 
   setUpButtons() {
     let player1Edit = document.getElementById("player1Edit");
     player1Edit.addEventListener("click", this.model.player1.editPlayer);
-    
+
     let player2Edit = document.getElementById("player2Edit");
     player2Edit.addEventListener("click", this.model.player2.editPlayer);
 
-    let player2Go = document.getElementById("player2Go");
-    player2Go.addEventListener("click", this.roboPlayer2.makeAMove);
+    // let player2Go = document.getElementById("player2Go");
+    // player2Go.addEventListener("click", this.roboPlayer.makeAMove);
 
     let btnNewGame = document.getElementById("btnNewGame");
     btnNewGame.addEventListener("click", this.newGame);
@@ -71,13 +72,22 @@ export default class GameController {
       this.changePlayers();
     }
     this.view.renderGame();
+    return hit;
   }
 
   changePlayers() {
     this.model.changePlayers();
-    // if (this.currentPlayer.isBot) {
-    //   this.currentPlayer.roboPlayer.makeAMove();
-    // }
+    if (
+      this.model.currentPlayer.isBot &&
+      this.model.currentPlayer.id === this.roboPlayer.id
+    ) {
+      const evt = new CustomEvent("makeAnotherMove", { bubbles: false });
+      setTimeout(() => document.dispatchEvent(evt), 0);
+    }
+  }
+
+  roboMove(evt) {
+    this.roboPlayer.makeAMove();
   }
 
   newGame() {

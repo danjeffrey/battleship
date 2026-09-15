@@ -16,7 +16,7 @@ export default class Player {
   constructor(isRobot, playerName, id) {
     this.isBot = isRobot;
     this.name = playerName;
-    this.id = id;
+    this.id = id;   
   }
 
   placeAllShips() {

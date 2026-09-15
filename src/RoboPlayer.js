@@ -6,17 +6,26 @@ import Player from "./Player.js";
 export default class RoboPlayer {
   history = [];
   controller;
+  id = 0;
 
-  constructor(ctrl) {
+  constructor(idx, ctrl) {
     this.controller = ctrl;
-    this.makeAMove = this.makeAMove.bind(this);    
+    this.makeAMove = this.makeAMove.bind(this);
+    this.id = idx;
   }
 
-  makeAMove() {
+  sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  async makeAMove() {
+    await this.sleep(300);
     let [row, col] = this.pickACell();
     console.log("" + row + ", " + col);
-    let result = this.controller.playerMove(row, col);
-    return result;
+    let hit = this.controller.playerMove(row, col);
+    if (hit) {
+      const evt = new CustomEvent("makeAnotherMove", { bubbles: false });
+      setTimeout(() => document.dispatchEvent(evt), 0);
+    }
+    return hit;
   }
 
   test() {
@@ -32,7 +41,7 @@ export default class RoboPlayer {
       row = Math.floor(Math.random() * 10) + 1;
       col = Math.floor(Math.random() * 10) + 1;
       result = [row, col];
-    } 
+    }
     this.history.push(result);
     return result;
   }

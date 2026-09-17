@@ -27,19 +27,19 @@ export default class GameView {
     this.playerAlerts[0].textContent = "";
     this.playerAlerts[1].textContent = "";
 
-    this.renderPlayer(this.model.player1);
-    this.renderPlayer(this.model.player2);
+    this.#renderPlayer(this.model.player1);
+    this.#renderPlayer(this.model.player2);
 
-    this.renderWhoseTurn();
+    this.#renderWhoseTurn();
   }
 
-  renderPlayer(player) {
-    this.renderGameBoard(player);
-    this.renderPlayerHeader(player);
-    this.renderPlayerStats(player);
+  #renderPlayer(player) {
+    this.#renderGameBoard(player);
+    this.#renderPlayerHeader(player);
+    this.#renderPlayerStats(player);
   }
 
-  renderPlayerHeader(player) {
+  #renderPlayerHeader(player) {
     const titleID = "player" + player.id + "Title";
     const divPlayerTitle = document.getElementById(titleID);
     divPlayerTitle.textContent = player.name;
@@ -53,13 +53,13 @@ export default class GameView {
     }
   }
 
-  renderGameBoard(player) {
+  #renderGameBoard(player) {
     let divGameBoard;
     divGameBoard = this.playerBoardDivs[player.id - 1];
-    this.renderCells(player, divGameBoard);
+    this.#renderCells(player, divGameBoard);
   }
 
-  renderCells(player, divBoard) {
+  #renderCells(player, divBoard) {
     // Clear the board first:
     divBoard.innerHTML = "";
     const gameBoard = player.gameBoard;
@@ -91,7 +91,7 @@ export default class GameView {
     });
   }
 
-  renderPlayerStats(player) {
+  #renderPlayerStats(player) {
     let strStats =
       "" +
       player.hits +
@@ -109,7 +109,7 @@ export default class GameView {
     }
   }
 
-  renderWhoseTurn() {
+  #renderWhoseTurn() {
     if (!this.model.weHaveAWinner) {
       // Who's turn is it?
       if (this.model.currentPlayer === this.model.player1) {
@@ -133,3 +133,25 @@ export default class GameView {
   }
 
 }
+
+
+/*
+    <div id="player2" class="player">
+      <div id="player2Header" class="playerHeader">
+        <div id="player2Title" class="playerTitle">Player 2</div>
+        <div id="player2Alert" class="alert">test</div>
+        <button id="player2Edit" type="button" class="editName">Edit</button>
+      </div>
+      <div id="gameBoard2" class="gameBoard"></div>
+      <div id="stats2" class="playerStats">stats 2</div>
+    </div>
+    <div id="player1" class="player">
+      <div id="player1Header" class="playerHeader">
+        <div id="player1Title" class="playerTitle">Player 1</div>
+        <div id="player1Alert" class="alert">test</div>
+        <button id="player1Edit" type="button" class="editName">Edit</button>
+      </div>
+      <div id="gameBoard1" class="gameBoard frozen"></div>
+      <div id="stats1" class="playerStats">stats 1</div>
+    </div>
+*/

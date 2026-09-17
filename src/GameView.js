@@ -1,37 +1,40 @@
 // GameView.js
 
 export default class GameView {
-  model;
-  playerTitles = [];
-  playerAlerts = [];
-  playerBoardDivs = [];
-  stats = [];
+  #model;
+  #playerTitles = [];
+  #playerAlerts = [];
+  #playerBoardDivs = [];
+  #stats = [];
 
   constructor(mdl) {
-    this.model = mdl;
+    this.#model = mdl;
 
-    this.playerTitles[0] = document.getElementById("player1Title");
-    this.playerTitles[1] = document.getElementById("player2Title");
+    this.#playerTitles[0] = document.getElementById("player1Title");
+    this.#playerTitles[1] = document.getElementById("player2Title");
 
-    this.playerAlerts[0] = document.getElementById("player1Alert");
-    this.playerAlerts[1] = document.getElementById("player2Alert");
+    this.#playerAlerts[0] = document.getElementById("player1Alert");
+    this.#playerAlerts[1] = document.getElementById("player2Alert");
 
-    this.playerBoardDivs[0] = document.getElementById("gameBoard1");
-    this.playerBoardDivs[1] = document.getElementById("gameBoard2");
+    this.#playerBoardDivs[0] = document.getElementById("gameBoard1");
+    this.#playerBoardDivs[1] = document.getElementById("gameBoard2");
 
-    this.stats[0] = document.getElementById("stats1");
-    this.stats[1] = document.getElementById("stats2");
+    this.#stats[0] = document.getElementById("stats1");
+    this.#stats[1] = document.getElementById("stats2");
   }
 
   renderGame() {
-    this.playerAlerts[0].textContent = "";
-    this.playerAlerts[1].textContent = "";
+    this.#playerAlerts[0].textContent = "";
+    this.#playerAlerts[1].textContent = "";
 
-    this.#renderPlayer(this.model.player1);
-    this.#renderPlayer(this.model.player2);
+    this.#renderPlayer(this.#model.player1);
+    this.#renderPlayer(this.#model.player2);
 
     this.#renderWhoseTurn();
   }
+
+  // ###############################################################
+  // ## Private Methods
 
   #renderPlayer(player) {
     this.#renderGameBoard(player);
@@ -46,16 +49,16 @@ export default class GameView {
 
     if (player.hasWon) {
       if (player.id === 1) {
-        this.playerAlerts[0].textContent = "Winner!";
+        this.#playerAlerts[0].textContent = "Winner!";
       } else {
-        this.playerAlerts[1].textContent = "Winner!";
+        this.#playerAlerts[1].textContent = "Winner!";
       }
     }
   }
 
   #renderGameBoard(player) {
     let divGameBoard;
-    divGameBoard = this.playerBoardDivs[player.id - 1];
+    divGameBoard = this.#playerBoardDivs[player.id - 1];
     this.#renderCells(player, divGameBoard);
   }
 
@@ -103,30 +106,30 @@ export default class GameView {
       player.losses +
       "]";
     if (player.id === 1) {
-      this.stats[0].textContent = strStats;
+      this.#stats[0].textContent = strStats;
     } else {
-      this.stats[1].textContent = strStats;
+      this.#stats[1].textContent = strStats;
     }
   }
 
   #renderWhoseTurn() {
-    if (!this.model.weHaveAWinner) {
+    if (!this.#model.weHaveAWinner) {
       // Who's turn is it?
-      if (this.model.currentPlayer === this.model.player1) {
-        this.playerAlerts[0].textContent = "Your turn!";
-        if (this.playerBoardDivs[1].classList.contains("frozen")) {
-          this.playerBoardDivs[1].classList.remove("frozen");
+      if (this.#model.currentPlayer === this.#model.player1) {
+        this.#playerAlerts[0].textContent = "Your turn!";
+        if (this.#playerBoardDivs[1].classList.contains("frozen")) {
+          this.#playerBoardDivs[1].classList.remove("frozen");
         }
-        if (!this.playerBoardDivs[0].classList.contains("frozen")) {
-          this.playerBoardDivs[0].classList.add("frozen");
+        if (!this.#playerBoardDivs[0].classList.contains("frozen")) {
+          this.#playerBoardDivs[0].classList.add("frozen");
         }
       } else {
-        this.playerAlerts[1].textContent = "Your turn!";
-        if (this.playerBoardDivs[0].classList.contains("frozen")) {
-          this.playerBoardDivs[0].classList.remove("frozen");
+        this.#playerAlerts[1].textContent = "Your turn!";
+        if (this.#playerBoardDivs[0].classList.contains("frozen")) {
+          this.#playerBoardDivs[0].classList.remove("frozen");
         }
-        if (!this.playerBoardDivs[1].classList.contains("frozen")) {
-          this.playerBoardDivs[1].classList.add("frozen");
+        if (!this.#playerBoardDivs[1].classList.contains("frozen")) {
+          this.#playerBoardDivs[1].classList.add("frozen");
         }
       }
     }

@@ -19,7 +19,7 @@ export default class RoboPlayer {
 
   async makeAMove() {
     await this.sleep(300);
-    let [row, col] = this.pickACell();
+    let [row, col] = this.#pickACell();
     console.log("" + row + ", " + col);
     let hit = this.controller.playerMove(row, col);
     if (hit) {
@@ -33,7 +33,10 @@ export default class RoboPlayer {
     return 23;
   }
 
-  pickACell() {
+  // ################################################################
+  // ## Private Methods: 
+
+  #pickACell() {
     let row = Math.floor(Math.random() * 10) + 1;
     let col = Math.floor(Math.random() * 10) + 1;
     let result = [row, col];

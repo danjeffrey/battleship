@@ -5,12 +5,14 @@ export default class GameView {
   #divGame; // HTML element that holds the game view
   #divPlayerStats;
   #divOpponentStats;
+  #singlePlayerMode = true;
   divBoardOpponent;
   divBoardPlayer;
 
   constructor(mdl) {
     this.#model = mdl;
     this.#divGame = document.getElementById("theGame");
+    this.#singlePlayerMode = ( mdl.player1.isBot || mdl.player2.isBot );
   }
 
   renderGame() {

@@ -51,15 +51,10 @@ export default class GameModel {
   }
 
   resetGame() {
-    // Clear out hits, misses, etc.
+    // Clear out hits, misses, etc:
+    this.player1.clear();
+    this.player2.clear();
+    
     this.currentPlayer = this.player1;
-
-    this.player1.hits = 0;
-    this.player1.misses = 0;
-    this.player1.gameBoard.clear();
-
-    this.player2.hits = 0;
-    this.player2.misses = 0;
-    this.player2.gameBoard.clear();
   }
 }

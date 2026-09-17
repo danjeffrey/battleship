@@ -16,7 +16,7 @@ export default class Player {
   constructor(isRobot, playerName, id) {
     this.isBot = isRobot;
     this.name = playerName;
-    this.id = id;   
+    this.id = id;
   }
 
   placeAllShips() {
@@ -28,7 +28,7 @@ export default class Player {
     this.gameBoard.placeShip(1, 5, 3, "V");
     this.gameBoard.placeShip(1, 7, 3, "V");
     this.gameBoard.placeShip(1, 9, 3, "V");
-    // Column 5
+    // Co lumn 5
     this.gameBoard.placeShip(3, 1, 5, "V");
     this.gameBoard.placeShip(1, 5, 5, "V");
     // Column 7
@@ -47,4 +47,27 @@ export default class Player {
     return this.gameBoard.isReady();
   }
 
+  getStatsString() {
+    let stats =
+      "" +
+      this.hits +
+      " hits, " +
+      this.misses +
+      " misses [" +
+      this.wins +
+      "-" +
+      this.losses +
+      "]";
+    if (this.hasWon) {
+      stats = stats + " --- You Won!";
+    }
+    return stats;
+  }
+
+  clear() {
+    this.gameBoard.clear();
+    this.hits = 0;
+    this.misses = 0;
+    this.hasWon = false;
+  }
 }

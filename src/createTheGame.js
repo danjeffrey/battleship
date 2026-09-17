@@ -14,5 +14,4 @@ export default function createTheGame() {
     const model = new GameModel(player1, player2);
     const view = new GameView(model);
     const controller = new GameController(model, view);
-    view.renderGame();
 }

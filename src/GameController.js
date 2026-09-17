@@ -3,87 +3,86 @@
 import RoboPlayer from "./RoboPlayer.js";
 
 export default class GameController {
-  model;
-  view;
-  #boardDivPlayer1;
-  #boardDivPlayer2;
-  roboPlayer = null;
+  #model;
+  #gameOver;
+  #view;
+  #roboPlayer = null;
 
   constructor(gameModel, gameView) {
-    this.model = gameModel;
-    this.view = gameView;
+    this.#model = gameModel;
+    this.#view = gameView;
 
-    this.#boardDivPlayer1 = document.getElementById("gameBoard1");
-    this.#boardDivPlayer1.addEventListener(
-      "click",
-      this.#handlePlayerClick.bind(this),
-    );
-    this.#boardDivPlayer2 = document.getElementById("gameBoard2");
-    this.#boardDivPlayer2.addEventListener(
-      "click",
-      this.#handlePlayerClick.bind(this),
-    );
-
-    if (this.model.player1.isBot) {
-      this.roboPlayer = new RoboPlayer(1, this);
-    } else if (this.model.player2.isBot) {
-      this.roboPlayer = new RoboPlayer(2, this);
+    if (this.#model.player1.isBot) {
+      this.#roboPlayer = new RoboPlayer(1, this);
+    } else if (this.#model.player2.isBot) {
+      this.#roboPlayer = new RoboPlayer(2, this);
     }
 
-    this.#setUpButtons();
-
+    // This can not be called in #setupListeners because it does not
+    // bind to a DOM element and many listeners will be creatd for
+    // each single event.
     document.addEventListener("makeAnotherMove", this.#roboMove.bind(this));
+
+    this.#renderGame();
   }
 
   playerMove(row, col) {
     let hit = false;
-    this.weHaveAWinner = false;
-    let activeBoard = this.model.getActiveBoard();
+    let activeBoard = this.#model.getActiveBoard();
     hit = activeBoard.receiveAttack(row, col);
-    let result = this.model.processHitOrMiss(activeBoard, hit);
-    if (result === "miss") {
-      this.changePlayers();
+    let result = this.#model.processHitOrMiss(activeBoard, hit);
+    this.#gameOver = this.#model.weHaveAWinner;
+    if (! this.#gameOver) {
+      if (result === "miss") {
+        this.changePlayers();
+      }
     }
-    this.view.renderGame();
+    this.#renderGame();
     return hit;
   }
 
   changePlayers() {
-    this.model.changePlayers();
+    this.#model.changePlayers();
+
     if (
-      this.model.currentPlayer.isBot &&
-      this.model.currentPlayer.id === this.roboPlayer.id
+      this.#model.currentPlayer.isBot &&
+      this.#model.currentPlayer.id === this.#roboPlayer.id
     ) {
       const evt = new CustomEvent("makeAnotherMove", { bubbles: false });
       setTimeout(() => document.dispatchEvent(evt), 0);
     }
   }
 
-  newGame() {
-    this.model.resetGame();
-    this.view.renderGame();
-  }
-
   // #####################################################################
   // ## Private methods:
 
-  #roboMove(evt) {
-    this.roboPlayer.makeAMove();
+  #renderGame() {
+    this.#view.renderGame();
+    this.#setUpListeners();
   }
 
-  #setUpButtons() {
+  #setUpListeners() {
+    this.#view.divBoardOpponent.addEventListener(
+      "click",
+      this.#handlePlayerClick.bind(this),
+    );
+
     let player1Edit = document.getElementById("player1Edit");
-    player1Edit.addEventListener("click", this.model.player1.editPlayer);
+    if (player1Edit) {
+      player1Edit.addEventListener("click", this.#model.player1.editPlayer);
+    }
 
     let player2Edit = document.getElementById("player2Edit");
-    player2Edit.addEventListener("click", this.model.player2.editPlayer);
+    if (player2Edit) {
+      player2Edit.addEventListener("click", this.#model.player2.editPlayer);
+    }
 
     let btnNewGame = document.getElementById("btnNewGame");
-    btnNewGame.addEventListener("click", this.newGame);
+    btnNewGame.addEventListener("click", this.#newGame.bind(this));
   }
 
   #handlePlayerClick(event) {
-    if (!this.model.weHaveAWinner) {
+    if (!this.#gameOver) {
       // cell id looks like this: cell[6][8]
       const cell = event.target;
       if (cell.classList.contains("cell")) {
@@ -95,4 +94,13 @@ export default class GameController {
     }
   }
 
+  #newGame() {
+    this.#model.resetGame();  
+    this.#gameOver = false;  
+    this.#renderGame();
+  }
+
+  #roboMove(evt) {
+    this.#roboPlayer.makeAMove();
+  }
 }

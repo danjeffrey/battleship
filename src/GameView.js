@@ -31,12 +31,17 @@ export default class GameView {
     this.#divPlayerStats = this.#renderStats(this.#divGame, player.id);
     this.#divPlayerStats.classList.add("player");
 
+    // <div id="theCase" class="case">
+    let divCase = document.createElement("div");
+    divCase.classList.add("case");
+    this.#divGame.appendChild(divCase);
     this.divBoardOpponent = this.#renderGameBoard(
+      divCase, 
       true,
       opponentBoardData,
       opponent.id,
     );
-    this.divBoardPlayer = this.#renderGameBoard(false, myBoardData, player.id);
+    this.divBoardPlayer = this.#renderGameBoard(divCase, false, myBoardData, player.id);
 
     this.#divOpponentStats = this.#renderStats(this.#divGame, opponent.id);
     this.#divOpponentStats.classList.add("opponent");
@@ -85,14 +90,14 @@ export default class GameView {
   }
 
   // id = 2 means the opponent. id = 1 means current player
-  #renderGameBoard(active, gameBoardData, id) {
+  #renderGameBoard(divParent, active, gameBoardData, id) {    
     let divGameBoard = document.createElement("div");
     divGameBoard.id = "gameBoard" + id;
     divGameBoard.classList.add("gameBoard");
     if (active) {
       divGameBoard.classList.add("active");
     }
-    this.#divGame.appendChild(divGameBoard);
+    divParent.appendChild(divGameBoard);
     this.#renderCells(divGameBoard, gameBoardData);
     return divGameBoard;
   }
@@ -104,6 +109,9 @@ export default class GameView {
     const missSet = new Set(boardData.misses.map((h) => `${h.row},${h.col}`));
     boardData.rows.forEach(function (row) {
       boardData.cols.forEach(function (col) {
+
+        // TODO: Show ship cells for player's board. 
+
         const cell = document.createElement("div");
         divGameBoard.appendChild(cell);
         cell.id = "cell[" + row + "][" + col + "]";

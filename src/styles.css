@@ -41,6 +41,7 @@ body {
   width: 400px;
   height: 400px;
   display: grid;
+  margin: 25px;
   grid-template-columns: repeat(10, 40px);
   grid-template-rows: repeat(10, 40px);
 }
@@ -104,4 +105,13 @@ body {
 
 button {
   height: 30px;
+}
+
+.case {
+  background-color: darkblue;
+}
+
+.case.player2 {
+  padding: 10px;
+  background-color: darkred;
 }

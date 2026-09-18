@@ -10,6 +10,6 @@ x. Add a controller to make it MVC? - Issue is this: How will the bot player ini
 x. Automate the bot opponent
 2. Enable two-player mode 
   x. Add single-playermode member to view
-  2.2 add a player swap screen - changingPlayers state variable
-  2.3 show ships in current players own board 
+  2.2 Add a player swap screen - changingPlayers state variable
+  2.3 Show ships in current players own board 
 3. Enable users to place ships

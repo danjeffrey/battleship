@@ -13,7 +13,12 @@ export default class GameModel {
   }
 
   isReady() {
-    return this.player1 !== null && this.player1.isReady() && this.player2 !== null && this.player2.isReady();
+    return (
+      this.player1 !== null &&
+      this.player1.isReady() &&
+      this.player2 !== null &&
+      this.player2.isReady()
+    );
   }
 
   getActiveBoard() {
@@ -25,9 +30,7 @@ export default class GameModel {
   }
 
   processHitOrMiss(board, hit) {
-    let result = "miss";
     if (hit) {
-      result = "hit";
       this.currentPlayer.hits += 1;
       this.weHaveAWinner = board.allShipsSunk();
     } else {
@@ -42,7 +45,6 @@ export default class GameModel {
         this.player1.losses += 1;
       }
     }
-    return result;
   }
 
   changePlayers() {
@@ -51,10 +53,10 @@ export default class GameModel {
   }
 
   resetGame() {
-    // Clear out hits, misses, etc:
+    // Clear out everything:
+    this.weHaveAWinner = false;
     this.player1.clear();
     this.player2.clear();
-    
     this.currentPlayer = this.player1;
   }
 }

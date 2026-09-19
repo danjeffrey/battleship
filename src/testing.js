@@ -1,5 +1,5 @@
 // src/testing.js
-"use strict"
+"use strict";
 
 function capitalize(str) {
   return str[0].toUpperCase() + str.slice(1);
@@ -47,7 +47,7 @@ function caesarCipher(strInput, shiftFactor) {
     // Uppercase A–Z
     if (char >= "A" && char <= "Z") {
       const code = char.charCodeAt(0) - 65;
-      const shifted = (code + shift + 26) % 26; 
+      const shifted = (code + shift + 26) % 26;
       result += String.fromCharCode(shifted + 65);
     }
     // Lowercase a–z
@@ -65,4 +65,4 @@ function caesarCipher(strInput, shiftFactor) {
   return result;
 }
 
-export { capitalize, reverseString, Calculator, analyzeArray, caesarCipher};
+export { capitalize, reverseString, Calculator, analyzeArray, caesarCipher };

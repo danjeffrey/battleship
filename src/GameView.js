@@ -5,14 +5,21 @@ export default class GameView {
   #divGame; // HTML element that holds the game view
   #divPlayerStats;
   #divOpponentStats;
-  #singlePlayerMode = true;
+
+  singlePlayerMode = true;
   divBoardOpponent;
   divBoardPlayer;
+
+  static Modes = Object.freeze({
+    SWAPPING: "SWAPPING",
+    SINGLE_PLAYER: "SINGLE_PLAYER",
+    NORMAL: "NORMAL",
+  });
 
   constructor(mdl) {
     this.#model = mdl;
     this.#divGame = document.getElementById("theGame");
-    this.#singlePlayerMode = ( mdl.player1.isBot || mdl.player2.isBot );
+    this.singlePlayerMode = mdl.player1.isBot || mdl.player2.isBot;
   }
 
   renderGame() {
@@ -36,16 +43,21 @@ export default class GameView {
     divCase.classList.add("case");
     this.#divGame.appendChild(divCase);
     this.divBoardOpponent = this.#renderGameBoard(
-      divCase, 
+      divCase,
       true,
       opponentBoardData,
       opponent.id,
     );
-    this.divBoardPlayer = this.#renderGameBoard(divCase, false, myBoardData, player.id);
+    this.divBoardPlayer = this.#renderGameBoard(
+      divCase,
+      false,
+      myBoardData,
+      player.id,
+    );
 
     this.#divOpponentStats = this.#renderStats(this.#divGame, opponent.id);
     this.#divOpponentStats.classList.add("opponent");
-
+    this.#freezeIfGameOver();
     this.updateStats();
   }
 
@@ -54,6 +66,11 @@ export default class GameView {
     this.#divPlayerStats.textContent = strStats;
     let strStatss = this.#getOpponent().getStatsString();
     this.#divOpponentStats.textContent = strStatss;
+  }
+
+  resetGame() {
+    this.divBoardOpponent.classList.remove("frozen");
+    this.divBoardPlayer.classList.remove("frozen");
   }
 
   #getOpponent() {
@@ -90,7 +107,7 @@ export default class GameView {
   }
 
   // id = 2 means the opponent. id = 1 means current player
-  #renderGameBoard(divParent, active, gameBoardData, id) {    
+  #renderGameBoard(divParent, active, gameBoardData, id) {
     let divGameBoard = document.createElement("div");
     divGameBoard.id = "gameBoard" + id;
     divGameBoard.classList.add("gameBoard");
@@ -105,24 +122,27 @@ export default class GameView {
   #renderCells(divGameBoard, boardData) {
     // Clear the board first:
     divGameBoard.innerHTML = "";
-    const hitSet = new Set(boardData.hits.map((h) => `${h.row},${h.col}`));
-    const missSet = new Set(boardData.misses.map((h) => `${h.row},${h.col}`));
+    // const hitSet = new Set(boardData.hits.map((h) => `${h.row},${h.col}`));
+    // const missSet = new Set(boardData.misses.map((h) => `${h.row},${h.col}`));
     boardData.rows.forEach(function (row) {
       boardData.cols.forEach(function (col) {
-
-        // TODO: Show ship cells for player's board. 
-
+        // TODO: Show ship cells for player's board.
         const cell = document.createElement("div");
         divGameBoard.appendChild(cell);
         cell.id = "cell[" + row + "][" + col + "]";
         cell.classList.add("cell");
-        const key = `${row},${col}`;
-        if (hitSet.has(key)) {
-          cell.textContent = "X";
-          cell.classList.add("hit");
-        } else if (missSet.has(key)) {
-          cell.textContent = "-";
-          cell.classList.add("miss");
+
+        let [isShip, wasClicked] = boardData.getCellValues(row, col);
+        if (wasClicked) {
+          if (isShip) {
+            cell.textContent = "X";
+            cell.classList.add("hit");
+          } else {
+            cell.textContent = "-";
+            cell.classList.add("miss");
+          }
+        } else {
+          cell.textContent = "";
         }
       });
     });
@@ -137,7 +157,7 @@ export default class GameView {
     return divStats;
   }
 
-  #renderWhoseTurn() {
+  #freezeIfGameOver() {
     if (this.#model.weHaveAWinner) {
       this.divBoardOpponent.classList.add("frozen");
       this.divBoardPlayer.classList.add("frozen");

@@ -1,26 +1,25 @@
 // Ship.js
-"use strict"
+"use strict";
 
 export default class Ship {
-    id;
-    size;
-    hits = 0;
-    sunk = false;
+  id;
+  size;
+  hits = 0;
 
-    constructor(len) {
-        this.size = len;
+  constructor(len) {
+    this.size = len;
+  }
+
+  hit() {
+    this.hits++;
+    return this;
+  }
+
+  isSunk() {
+    let result = false;
+    if (this.hits >= this.size) {
+      result = true;
     }
-
-    hit() {
-        this.hits++;
-        return this;
-    }
-
-    isSunk() {
-        if ( this.hits >= this.size ) {
-            this.sunk = true;
-        }
-        return this.sunk;
-    }
-
+    return result;
+  }
 }

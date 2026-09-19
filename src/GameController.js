@@ -18,26 +18,37 @@ export default class GameController {
       this.#roboPlayer = new RoboPlayer(2, this);
     }
 
-    // This can not be called in #setupListeners because it does not
-    // bind to a DOM element and many listeners will be creatd for
+    // These next two listeners can not be called in #setupListeners
+    // because they do not bind to a DOM element that will be replaced
+    // when rendering the game and multiple listeners will be created for
     // each single event.
     document.addEventListener("makeAnotherMove", this.#roboMove.bind(this));
+    let btnNewGame = document.getElementById("btnNewGame");
+    btnNewGame.addEventListener("click", this.#newGame.bind(this));
 
     this.#renderGame();
   }
 
   playerMove(row, col) {
-    let hit = false;
     let activeBoard = this.#model.getActiveBoard();
-    hit = activeBoard.receiveAttack(row, col);
-    let result = this.#model.processHitOrMiss(activeBoard, hit);
-    this.#gameOver = this.#model.weHaveAWinner;
-    if (! this.#gameOver) {
-      if (result === "miss") {
-        this.changePlayers();
+    // The following returns: // 0 = previously played, 1 = hit, 2 = miss
+    let alreadyPlayedHitOrMiss = activeBoard.receiveAttack(row, col);
+    let hit = alreadyPlayedHitOrMiss === 1;
+    if (alreadyPlayedHitOrMiss > 0) {
+      this.#model.processHitOrMiss(activeBoard, hit);
+      this.#gameOver = this.#model.weHaveAWinner;
+      if (!this.#gameOver) {
+        if (alreadyPlayedHitOrMiss === 2) {
+          this.changePlayers();
+        }
       }
+      if (!this.#model.currentPlayer.isBot || this.#gameOver) {
+        // Don't re-render the game while the bot it playing
+        this.#renderGame();
+      }
+    } else {
+      // Do nothing. Let the player try again.
     }
-    this.#renderGame();
     return hit;
   }
 
@@ -50,6 +61,14 @@ export default class GameController {
     ) {
       const evt = new CustomEvent("makeAnotherMove", { bubbles: false });
       setTimeout(() => document.dispatchEvent(evt), 0);
+    }
+  }
+
+  waitCursor(show) {
+    if (show) {
+      document.body.style.cursor = "wait";
+    } else {
+      document.body.style.cursor = "default";
     }
   }
 
@@ -76,9 +95,6 @@ export default class GameController {
     if (player2Edit) {
       player2Edit.addEventListener("click", this.#model.player2.editPlayer);
     }
-
-    let btnNewGame = document.getElementById("btnNewGame");
-    btnNewGame.addEventListener("click", this.#newGame.bind(this));
   }
 
   #handlePlayerClick(event) {
@@ -95,8 +111,10 @@ export default class GameController {
   }
 
   #newGame() {
-    this.#model.resetGame();  
-    this.#gameOver = false;  
+    this.#model.resetGame();
+    this.#gameOver = false;
+    this.#view.resetGame();
+    this.#roboPlayer.clear();
     this.#renderGame();
   }
 

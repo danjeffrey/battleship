@@ -7,4 +7,3 @@ import createTheGame from "./createTheGame.js";
 
 generateFooter();
 createTheGame();
-

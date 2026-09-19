@@ -9,4 +9,3 @@ import Player from "../src/Player.js";
 it("Place holder", () => {
   expect(1).toBe(1);
 });
-

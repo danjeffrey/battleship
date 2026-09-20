@@ -1,16 +1,22 @@
 // GameController.js
 
 import RoboPlayer from "./RoboPlayer.js";
+import GameTypes from "./GameTypes.js";
+import GamePhases from "./GamePhases.js";
 
 export default class GameController {
   #model;
-  #gameOver;
   #view;
   #roboPlayer = null;
+  #gameType = GameTypes.SINGLE_PLAYER_GAME;
+  #gamePhase = GamePhases.NEW_GAME;
 
   constructor(gameModel, gameView) {
     this.#model = gameModel;
     this.#view = gameView;
+
+    console.log(this.#gameType);
+    console.log(this.#gamePhase);
 
     if (this.#model.player1.isBot) {
       this.#roboPlayer = new RoboPlayer(1, this);
@@ -26,7 +32,8 @@ export default class GameController {
     let btnNewGame = document.getElementById("btnNewGame");
     btnNewGame.addEventListener("click", this.#newGame.bind(this));
 
-    this.#renderGame();
+    this.#gamePhase = GamePhases.GAME_SETUP;
+    this.#render();
   }
 
   playerMove(row, col) {
@@ -36,15 +43,17 @@ export default class GameController {
     let hit = alreadyPlayedHitOrMiss === 1;
     if (alreadyPlayedHitOrMiss > 0) {
       this.#model.processHitOrMiss(activeBoard, hit);
-      this.#gameOver = this.#model.weHaveAWinner;
-      if (!this.#gameOver) {
+      if (!this.#model.weHaveAWinner) {
         if (alreadyPlayedHitOrMiss === 2) {
           this.changePlayers();
         }
+      } else {
+        this.gamePhase = GamePhases.GAME_OVER;
       }
-      if (!this.#model.currentPlayer.isBot || this.#gameOver) {
+      if (!this.#model.currentPlayer.isBot || this.#model.weHaveAWinner) {
         // Don't re-render the game while the bot it playing
-        this.#renderGame();
+        // but do rerender if the game is over.
+        this.#render();
       }
     } else {
       // Do nothing. Let the player try again.
@@ -72,33 +81,64 @@ export default class GameController {
     }
   }
 
+  advanceGamePhase() {
+    switch (this.#gamePhase) {
+      case GamePhases.NEW_GAME:
+        this.#gamePhase = GamePhases.GAME_SETUP;
+        break;
+      case GamePhases.GAME_SETUP:
+        this.#gamePhase = GamePhases.GAME_ON;
+        break;
+      case GamePhases.GAME_ON:
+        this.#gamePhase = GamePhases.GAME_OVER;
+        break;
+      default:
+        console.log(
+          "ERROR: Cannot advance beyond GAME_OVER without starting a new game.",
+        );
+        break;
+    }
+  }
+
   // #####################################################################
   // ## Private methods:
 
-  #renderGame() {
-    this.#view.renderGame();
+  #render() {
+    this.#view.render(this.#gameType, this.#gamePhase);
     this.#setUpListeners();
   }
 
-  #setUpListeners() {
+  #setUpListeners() {    
+    switch (this.#gamePhase) {
+      case GamePhases.NEW_GAME:
+        break;
+      case GamePhases.GAME_SETUP:
+        this.#enableListenerPlayerClickOwnBoard();
+        break;
+      case GamePhases.GAME_ON:
+        this.#enableListenerPlayerClickOpponent();
+        break;
+      case GamePhases.GAME_OVER:
+        break;
+    }
+  }
+
+  #enableListenerPlayerClickOwnBoard() {
     this.#view.divBoardOpponent.addEventListener(
       "click",
       this.#handlePlayerClick.bind(this),
     );
+  }
 
-    let player1Edit = document.getElementById("player1Edit");
-    if (player1Edit) {
-      player1Edit.addEventListener("click", this.#model.player1.editPlayer);
-    }
-
-    let player2Edit = document.getElementById("player2Edit");
-    if (player2Edit) {
-      player2Edit.addEventListener("click", this.#model.player2.editPlayer);
-    }
+  #enableListenerPlayerClickOpponent() {
+    this.#view.divBoardOpponent.addEventListener(
+      "click",
+      this.#handlePlayerClick.bind(this),
+    );
   }
 
   #handlePlayerClick(event) {
-    if (!this.#gameOver) {
+    if (!this.#model.weHaveAWinner) {
       // cell id looks like this: cell[6][8]
       const cell = event.target;
       if (cell.classList.contains("cell")) {
@@ -111,11 +151,13 @@ export default class GameController {
   }
 
   #newGame() {
+    this.#gamePhase = GamePhases.GAME_OVER;
     this.#model.resetGame();
-    this.#gameOver = false;
+    this.#model.weHaveAWinner = false;
     this.#view.resetGame();
     this.#roboPlayer.clear();
-    this.#renderGame();
+    this.#gamePhase = GamePhases.NEW_GAME;
+    this.#render(this.#gameType, this.#gamePhase);
   }
 
   #roboMove(evt) {

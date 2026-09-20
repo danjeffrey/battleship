@@ -25,6 +25,7 @@ export default class RoboPlayer {
         //console.log("" + r + "-" + c);
         this.#unclickedCells.push("" + r + "-" + c);
       }
+      
     }
   }
 

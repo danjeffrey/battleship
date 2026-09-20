@@ -26,6 +26,7 @@ export default class RoboPlayer {
       const evt = new CustomEvent("makeAnotherMove", { bubbles: false });
       setTimeout(() => document.dispatchEvent(evt), 0);
     }
+    
     return hit;
   }
 

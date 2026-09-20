@@ -126,16 +126,12 @@ button {
   display: none;
 }
 
-.ship0 {
-  background-color: #222;
-}
-
 .ship1 {
-  background-color: #333;
+  background-color: #bbb;
 }
 
 .ship2 {
-  background-color: #444;
+  background-color: #888;
 }
 
 .ship3 {
@@ -143,25 +139,7 @@ button {
 }
 
 .ship4 {
-  background-color: #666;
+  background-color: #222;
 }
 
-.ship5{
-  background-color: #777;
-}
 
-.ship6 {
-  background-color: #888;
-}
-
-.ship7 {
-  background-color: #999;
-}
-
-.ship8 {
-  background-color: #aaa;
-}
-
-.ship9 {
-  background-color: #bbb;
-}

@@ -32,7 +32,7 @@ export default class GameController {
     let btnNewGame = document.getElementById("btnNewGame");
     btnNewGame.addEventListener("click", this.#newGame.bind(this));
 
-    this.#gamePhase = GamePhases.GAME_SETUP;
+    this.#gamePhase = GamePhases.GAME_ON;
     this.#render();
   }
 
@@ -156,7 +156,7 @@ export default class GameController {
     this.#model.weHaveAWinner = false;
     this.#view.resetGame();
     this.#roboPlayer.clear();
-    this.#gamePhase = GamePhases.NEW_GAME;
+    this.#gamePhase = GamePhases.GAME_ON;
     this.#render(this.#gameType, this.#gamePhase);
   }
 

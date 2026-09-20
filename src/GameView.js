@@ -178,7 +178,8 @@ export default class GameView {
     let btnEdit = document.createElement("button");
     btnEdit.id = "player" + player.id + "Edit";
     btnEdit.textContent = "Edit";
-    btnEdit.classList.add("button edit");
+    btnEdit.classList.add("button");
+    btnEdit.classList.add("edit");
     divGameHeader.appendChild(btnEdit);
 
     return divGameHeader;
@@ -214,7 +215,8 @@ export default class GameView {
 
         if (divGameBoard.id === "gameBoard1") {
           if (shipIndex > -1) {
-            cell.classList.add("ship" + shipIndex);
+            const ship = boardData.ships[shipIndex];
+            cell.classList.add("ship" + ship.size);
           }
         }
         if (wasClicked) {

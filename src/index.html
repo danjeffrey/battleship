@@ -8,31 +8,20 @@
 </head>
 
 <body>
-  <h1>Battleship!</h1>
-  <div id="theGame" class="game">
-    <div id="player2" class="player">
-      <div id="player2Header" class="playerHeader">
-        <div id="player2Title" class="playerTitle">Player 2</div>
-        <div id="player2Alert" class="alert">test</div>
-        <button id="player2Edit" type="button" class="editName">Edit</button>
-      </div>
-      <div id="gameBoard2" class="gameBoard"></div>
-      <div id="stats2" class="playerStats">stats 2</div>
+  <img src="battlenavy.svg" class="logo" />
+  <div id="swapScreen" class="swapScreen hidden">
+    <p id="nextPlayerText" class="nextPlayerText">
+      Please switch to the other player bofre pressing the "Go" button. The next player is:
+    </p>
+    <div id="nextPlayerName" class="nextPlayerName""></div>
+    <button id=" btnNextPlayer" type="button" class="nextPlayer">Go</button>
     </div>
-    <div id="player1" class="player">
-      <div id="player1Header" class="playerHeader">
-        <div id="player1Title" class="playerTitle">Player 1</div>
-        <div id="player1Alert" class="alert">test</div>
-        <button id="player1Edit" type="button" class="editName">Edit</button>
-      </div>
-      <div id="gameBoard1" class="gameBoard frozen"></div>
-      <div id="stats1" class="playerStats">stats 1</div>
+    <div id="theGame" class="game">
     </div>
-  </div>
-  <div id="toolbar" class="toolbar">
-    <button id="btnNewGame" type="button" class="newGame">New Game</button>
-  </div>
-  <footer id="djFooter" class="footer"></footer>
+    <div id="toolbar" class="toolbar">
+      <button id="btnNewGame" type="button" class="newGame">New Game</button>
+    </div>
+    <footer id="djFooter" class="footer"></footer>
 </body>
 
 </html>

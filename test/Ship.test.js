@@ -18,5 +18,3 @@ it("Ship hit twice is sunk", () => {
 it("Ship size is right", () => {
   expect(new Ship(2).size).toBe(2);
 });
-
-

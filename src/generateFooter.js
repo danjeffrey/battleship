@@ -1,11 +1,13 @@
 // src/generateFooter.js
-"use strict"
+"use strict";
 
 export default function generateFooter() {
   const divFooter = document.getElementById("djFooter");
   let date = new Date();
   let yr = date.getFullYear();
-  divFooter.textContent = capitalize("this app was written by Dan Jeffrey in " + yr + ".");
+  divFooter.textContent = capitalize(
+    "this app was written by Dan Jeffrey in " + yr + ".",
+  );
 }
 
 function capitalize(str) {

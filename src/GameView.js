@@ -1,135 +1,175 @@
 // GameView.js
 
 export default class GameView {
-  model;
-  playerTitles = [];
-  playerAlerts = [];
-  playerBoardDivs = [];
-  stats = [];
+  #model;
+  #divGame; // HTML element that holds the game view
+  #divPlayerStats;
+  #divOpponentStats;
+
+  singlePlayerMode = true;
+  divBoardOpponent;
+  divBoardPlayer;
+
+  static Modes = Object.freeze({
+    SWAPPING: "SWAPPING",
+    SINGLE_PLAYER: "SINGLE_PLAYER",
+    NORMAL: "NORMAL",
+  });
 
   constructor(mdl) {
-    this.model = mdl;
-
-    this.playerTitles[0] = document.getElementById("player1Title");
-    this.playerTitles[1] = document.getElementById("player2Title");
-
-    this.playerAlerts[0] = document.getElementById("player1Alert");
-    this.playerAlerts[1] = document.getElementById("player2Alert");
-
-    this.playerBoardDivs[0] = document.getElementById("gameBoard1");
-    this.playerBoardDivs[1] = document.getElementById("gameBoard2");
-
-    this.stats[0] = document.getElementById("stats1");
-    this.stats[1] = document.getElementById("stats2");
+    this.#model = mdl;
+    this.#divGame = document.getElementById("theGame");
+    this.singlePlayerMode = mdl.player1.isBot || mdl.player2.isBot;
   }
 
   renderGame() {
-    this.playerAlerts[0].textContent = "";
-    this.playerAlerts[1].textContent = "";
-
-    this.renderPlayer(this.model.player1);
-    this.renderPlayer(this.model.player2);
-
-    this.renderWhoseTurn();
-  }
-
-  renderPlayer(player) {
-    this.renderGameBoard(player);
-    this.renderPlayerHeader(player);
-    this.renderPlayerStats(player);
-  }
-
-  renderPlayerHeader(player) {
-    const titleID = "player" + player.id + "Title";
-    const divPlayerTitle = document.getElementById(titleID);
-    divPlayerTitle.textContent = player.name;
-
-    if (player.hasWon) {
-      if (player.id === 1) {
-        this.playerAlerts[0].textContent = "Winner!";
-      } else {
-        this.playerAlerts[1].textContent = "Winner!";
-      }
+    let player = this.#model.currentPlayer;
+    let opponent = this.#model.player2;
+    if (this.#model.currentPlayer !== this.#model.player1) {
+      opponent = this.#model.player1;
     }
+
+    let opponentBoardData = opponent.gameBoard;
+    let myBoardData = player.gameBoard;
+
+    this.#divGame.innerHTML = "";
+    let divGameHeader = this.#renderGameHeader(player);
+
+    this.#divPlayerStats = this.#renderStats(this.#divGame, player.id);
+    this.#divPlayerStats.classList.add("player");
+
+    // <div id="theCase" class="case">
+    let divCase = document.createElement("div");
+    divCase.classList.add("case");
+    this.#divGame.appendChild(divCase);
+    this.divBoardOpponent = this.#renderGameBoard(
+      divCase,
+      true,
+      opponentBoardData,
+      opponent.id,
+    );
+    this.divBoardPlayer = this.#renderGameBoard(
+      divCase,
+      false,
+      myBoardData,
+      player.id,
+    );
+
+    this.#divOpponentStats = this.#renderStats(this.#divGame, opponent.id);
+    this.#divOpponentStats.classList.add("opponent");
+    this.#freezeIfGameOver();
+    this.updateStats();
   }
 
-  renderGameBoard(player) {
-    let divGameBoard;
-    divGameBoard = this.playerBoardDivs[player.id - 1];
-    this.renderCells(player, divGameBoard);
+  updateStats() {
+    let strStats = this.#model.currentPlayer.getStatsString();
+    this.#divPlayerStats.textContent = strStats;
+    let strStatss = this.#getOpponent().getStatsString();
+    this.#divOpponentStats.textContent = strStatss;
   }
 
-  renderCells(player, divBoard) {
+  resetGame() {
+    this.divBoardOpponent.classList.remove("frozen");
+    this.divBoardPlayer.classList.remove("frozen");
+  }
+
+  #getOpponent() {
+    return this.#model.currentPlayer === this.#model.player1
+      ? this.#model.player2
+      : this.#model.player1;
+  }
+
+  #renderGameHeader(player) {
+    const divGameHeader = document.createElement("div");
+    divGameHeader.id = "gameHeader";
+    divGameHeader.classList.add("gameHeader");
+    this.#divGame.appendChild(divGameHeader);
+
+    let divPlayerTitle = document.createElement("div");
+    divPlayerTitle.id = "playerTitle";
+    divPlayerTitle.classList.add("playerTitle");
+    divPlayerTitle.textContent = player.name;
+    divGameHeader.appendChild(divPlayerTitle);
+
+    let divAlert = document.createElement("div");
+    divAlert.id = "alert";
+    divAlert.classList.add("alert");
+    //playerAlert.textContent = "???";
+    divGameHeader.appendChild(divAlert);
+
+    let btnEdit = document.createElement("button");
+    btnEdit.id = "player" + player.id + "Edit";
+    btnEdit.textContent = "Edit";
+    btnEdit.classList.add("btnEdit");
+    divGameHeader.appendChild(btnEdit);
+
+    return divGameHeader;
+  }
+
+  // id = 2 means the opponent. id = 1 means current player
+  #renderGameBoard(divParent, active, gameBoardData, id) {
+    let divGameBoard = document.createElement("div");
+    divGameBoard.id = "gameBoard" + id;
+    divGameBoard.classList.add("gameBoard");
+    if (active) {
+      divGameBoard.classList.add("active");
+    }
+    divParent.appendChild(divGameBoard);
+    this.#renderCells(divGameBoard, gameBoardData);
+    return divGameBoard;
+  }
+
+  #renderCells(divGameBoard, boardData) {
     // Clear the board first:
-    divBoard.innerHTML = "";
-    const gameBoard = player.gameBoard;
-    const hitSet = new Set(gameBoard.hits.map((h) => `${h.row},${h.col}`));
-    const missSet = new Set(gameBoard.misses.map((h) => `${h.row},${h.col}`));
-    gameBoard.rows.forEach(function (row) {
-      gameBoard.cols.forEach(function (col) {
-        //console.log("row: " + row + "   col: " + col);
+    divGameBoard.innerHTML = "";
+    // const hitSet = new Set(boardData.hits.map((h) => `${h.row},${h.col}`));
+    // const missSet = new Set(boardData.misses.map((h) => `${h.row},${h.col}`));
+    boardData.rows.forEach(function (row) {
+      boardData.cols.forEach(function (col) {
+        // TODO: Show ship cells for player's board.
         const cell = document.createElement("div");
-        divBoard.appendChild(cell);
+        divGameBoard.appendChild(cell);
         cell.id = "cell[" + row + "][" + col + "]";
         cell.classList.add("cell");
-        const key = `${row},${col}`;
-        if (row === 1 && col === 1) {
-          console.log("gameBoard.hits[0] for " + player.name + ":");
-          console.log(gameBoard.hits[0]);
-          console.log("{ row, col }: ");
-          console.log({ row, col });
-          console.log(hitSet.has(key));
+
+        let [shipIndex, wasClicked] = boardData.getCellValues(row, col);
+
+        if (divGameBoard.id === "gameBoard1") {
+          if (shipIndex > -1) {
+            cell.classList.add("ship" + shipIndex);
+          }
         }
-        if (hitSet.has(key)) {
-          cell.textContent = "X";
-          cell.classList.add("hit");
-        } else if (missSet.has(key)) {
-          cell.textContent = "-";
-          cell.classList.add("miss");
+        if (wasClicked) {
+          if (shipIndex > -1) {
+            cell.textContent = "X";
+            cell.classList.add("hit");
+          } else {
+            cell.textContent = "-";
+            cell.classList.add("miss");
+          }
+        } else {
+          cell.textContent = "";
         }
       });
     });
   }
 
-  renderPlayerStats(player) {
-    let strStats =
-      "" +
-      player.hits +
-      " hits, " +
-      player.misses +
-      " misses [" +
-      player.wins +
-      "-" +
-      player.losses +
-      "]";
-    if (player.id === 1) {
-      this.stats[0].textContent = strStats;
+  #renderStats(div, id) {
+    //       <div id="stats2" class="playerStats">stats 2</div>
+    let divStats = document.createElement("div");
+    divStats.id = "stats" + id;
+    divStats.classList.add("stats");
+    div.appendChild(divStats);
+    return divStats;
+  }
+
+  #freezeIfGameOver() {
+    if (this.#model.weHaveAWinner) {
+      this.divBoardOpponent.classList.add("frozen");
+      this.divBoardPlayer.classList.add("frozen");
     } else {
-      this.stats[1].textContent = strStats;
+      this.divBoardOpponent.classList.remove("frozen");
+      this.divBoardPlayer.classList.add("frozen");
     }
   }
-
-  renderWhoseTurn() {
-    if (!this.model.weHaveAWinner) {
-      // Who's turn is it?
-      if (this.model.currentPlayer === this.model.player1) {
-        this.playerAlerts[0].textContent = "Your turn!";
-        if (this.playerBoardDivs[1].classList.contains("frozen")) {
-          this.playerBoardDivs[1].classList.remove("frozen");
-        }
-        if (!this.playerBoardDivs[0].classList.contains("frozen")) {
-          this.playerBoardDivs[0].classList.add("frozen");
-        }
-      } else {
-        this.playerAlerts[1].textContent = "Your turn!";
-        if (this.playerBoardDivs[0].classList.contains("frozen")) {
-          this.playerBoardDivs[0].classList.remove("frozen");
-        }
-        if (!this.playerBoardDivs[1].classList.contains("frozen")) {
-          this.playerBoardDivs[1].classList.add("frozen");
-        }
-      }
-    }
-  }
-
 }

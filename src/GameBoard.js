@@ -172,17 +172,17 @@ export default class GameBoard {
   }
 
   getCellValues(row, col) {
-    let isShip = false;
+    // let isShip = -1;
     let wasClicked = false;
     let val = this.grid[row][col];
     let [ship, clicked] = val.split("|");
-    if (ship > -1) {
-      isShip = true;
-    }
+    // if (ship > -1) {
+    //   isShip = true;
+    // }
     if (clicked != 0) {
       wasClicked = true;
     }
-    return [isShip, wasClicked];
+    return [ship, wasClicked];
   }
 
   // ################################################################

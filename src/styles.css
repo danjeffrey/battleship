@@ -125,3 +125,43 @@ button {
 .hidden {
   display: none;
 }
+
+.ship0 {
+  background-color: #222;
+}
+
+.ship1 {
+  background-color: #333;
+}
+
+.ship2 {
+  background-color: #444;
+}
+
+.ship3 {
+  background-color: #555;
+}
+
+.ship4 {
+  background-color: #666;
+}
+
+.ship5{
+  background-color: #777;
+}
+
+.ship6 {
+  background-color: #888;
+}
+
+.ship7 {
+  background-color: #999;
+}
+
+.ship8 {
+  background-color: #aaa;
+}
+
+.ship9 {
+  background-color: #bbb;
+}

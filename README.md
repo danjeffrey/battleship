@@ -12,10 +12,8 @@ x. Add single-playermode member to view
 x. Fix click on used cell
 x. fix screen flash when robot plays
 x. fix ship overlaps
--- Show ship cells for player's board.
+x. Show ship cells for player's board.
 7. Enable users to place ships
-
-
 
 8. Enable two-player mode 
 8.2. Add a player swap screen - changingPlayers state variable

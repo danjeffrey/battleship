@@ -132,9 +132,15 @@ export default class GameView {
         cell.id = "cell[" + row + "][" + col + "]";
         cell.classList.add("cell");
 
-        let [isShip, wasClicked] = boardData.getCellValues(row, col);
+        let [shipIndex, wasClicked] = boardData.getCellValues(row, col);
+
+        if (divGameBoard.id === "gameBoard1") {
+          if (shipIndex > -1) {
+            cell.classList.add("ship" + shipIndex);
+          }
+        }
         if (wasClicked) {
-          if (isShip) {
+          if (shipIndex > -1) {
             cell.textContent = "X";
             cell.classList.add("hit");
           } else {

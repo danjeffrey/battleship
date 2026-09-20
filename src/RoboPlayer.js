@@ -14,6 +14,10 @@ export default class RoboPlayer {
     this.makeAMove = this.makeAMove.bind(this);
     this.id = idx;
 
+    this.createUnclickedCellsList();
+  }
+  
+  createUnclickedCellsList() {
     const rows = [...Array(10)].map((_, i) => i + 1); // 1–10
     const cols = [...Array(10)].map((_, i) => i + 1); // 1–10
     for (const r of rows) {
@@ -45,6 +49,7 @@ export default class RoboPlayer {
 
   clear() {
     this.#unclickedCells = [];
+    this.createUnclickedCellsList();
   }
 
   // ################################################################
@@ -55,7 +60,9 @@ export default class RoboPlayer {
     const size = this.#unclickedCells.length;
     let str = "";
     if (size === 0) {
-      console.log("ERROR: RoboPlayer.#unclicked cells is empty but there is no winner in #pickACellFaster().");
+      console.log(
+        "ERROR: RoboPlayer.#unclicked cells is empty but there is no winner in #pickACellFaster().",
+      );
     } else if (size === 1) {
       str = this.#unclickedCells[0];
     } else {
@@ -70,5 +77,4 @@ export default class RoboPlayer {
     }
     return result;
   }
-
 }

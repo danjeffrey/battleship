@@ -23,8 +23,7 @@ export default class GameBoard {
   // of hits.
   receiveAttack(row, col) {
     let result = 0; // 0 = miss, 1 = hit, 2 = miss
-    if ( !row || !col || row < 1 || row > 10 || col < 1 || col > 10 )
-    {
+    if (!row || !col || row < 1 || row > 10 || col < 1 || col > 10) {
       console.log("Bad coordinates in receiveAttack(" + row + "," + col + "]");
     }
     let value = this.grid[row][col];
@@ -71,9 +70,7 @@ export default class GameBoard {
   }
 
   clear() {
-    for (let i = 0; i < this.ships.length; i++) {
-      this.ships[i].hits = 0;
-    }
+    this.ships = [];
     for (const r of this.rows) {
       this.grid[r] = {};
       for (const c of this.cols) {

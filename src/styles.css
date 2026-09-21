@@ -22,10 +22,15 @@ body {
   background-color: rgb(244, 204, 61);
 }
 
-.game {
+.main {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.main.setup {
+  align-items: center;
+  gap: 5px;
 }
 
 .stats.player {
@@ -142,4 +147,12 @@ button {
   background-color: #222;
 }
 
+#divSetupButtons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
 
+.lblPlayerName {
+  margin-right: 5px;
+}

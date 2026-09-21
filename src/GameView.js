@@ -38,6 +38,8 @@ export default class GameView {
   renderGameSetup(player) {
     let myBoardData = player.gameBoard;
     let divMain = document.getElementById("main");
+    divMain.id = "main";
+    divMain.classList.add("setup");
 
     let h3Title = document.createElement("h3");
     h3Title.textContent = "New Game";
@@ -52,53 +54,69 @@ export default class GameView {
 
     // Player1 input div:
     let divPlayer1 = document.createElement("div");
-    divPlayer1.classList.add("player");
-    divPlayer1.classList.add("edit");
+    divPlayer1.id = "divPlayer1";
+    divPlayer1.classList.add("divPlayer");
     divMain.appendChild(divPlayer1);
 
     let lblPlayer1 = document.createElement("label");
     lblPlayer1.textContent = " Player 1 name:";
-    lblPlayer1.htmlFor = "player1NameInput";
-    lblPlayer1.classList.add("playerName"); 
-    lblPlayer1.classList.add("label"); 
+    lblPlayer1.htmlFor = "lblPlayer1Name";
+    lblPlayer1.classList.add("lblPlayerName"); 
     divPlayer1.appendChild(lblPlayer1);
 
     const inputPlayer1Name = document.createElement("input");
     inputPlayer1Name.type = "inputPlayer1Name";
-    inputPlayer1Name.id = "textInput";
+    inputPlayer1Name.id = "inputPlayer1Name";
     inputPlayer1Name.name = "inputPlayer1Name";
+    inputPlayer1Name.value = this.#model.player1.name;
     divPlayer1.appendChild(inputPlayer1Name);
 
     // Player2 input div:
     let divPlayer2 = document.createElement("div");
-    divPlayer1.classList.add("player");
-    divPlayer1.classList.add("edit");
+    divPlayer1.id = "divPlayer2";
+    divPlayer1.classList.add("divPlayer");
     divMain.appendChild(divPlayer2);
 
     let lblPlayer2 = document.createElement("label");
     lblPlayer2.textContent = " Player 2 name:";
-    lblPlayer2.htmlFor = "player2NameInput";
-    lblPlayer2.classList.add("playerName"); 
-    lblPlayer2.classList.add("label"); 
+    lblPlayer2.htmlFor = "lblPlayer2Name";
+    lblPlayer2.classList.add("lblPlayerName"); 
     divPlayer2.appendChild(lblPlayer2);
-
+    
     const inputPlayer2Name = document.createElement("input");
     inputPlayer2Name.type = "inputPlayer2Name";
-    inputPlayer2Name.id = "textInput";
+    inputPlayer2Name.id = "inputPlayer2Name";
     inputPlayer2Name.name = "inputPlayer2Name";
+    inputPlayer2Name.value = this.#model.player2.name;
     divPlayer2.appendChild(inputPlayer2Name);
 
     // Game board to place ships
-    let divPlaceShips = document.createElement("div");
-    divPlaceShips.classList.add("gameBoard");
-    divMain.appendChild(divPlaceShips);
+    let divPlaceShips = this.#renderGameBoard(
+      divMain,
+      false,
+      myBoardData,
+      player.id,
+    );
+    
+    let divButtons = document.createElement("div");
+    divButtons.id = "divSetupButtons";
+    divButtons.classList.add("buttons");
+    divMain.appendChild(divButtons);
+
+    let btnPlaceShips = document.createElement("button");
+    btnPlaceShips.id = "btnShuffle";
+    btnPlaceShips.textContent = "Shuffle";
+    btnPlaceShips.classList.add("button");
+    btnPlaceShips.classList.add("Shuffle");
+    divButtons.appendChild(btnPlaceShips);
 
     let btnOK = document.createElement("button");
-    btnOK.id = "newGameOK";
+    btnOK.id = "btnOK";
     btnOK.textContent = "OK";
     btnOK.classList.add("button");
     btnOK.classList.add("OK");
-    divMain.appendChild(btnOK);
+    divButtons.appendChild(btnOK);
+
   }
 
   renderSinglePlayerGame() {
@@ -112,10 +130,10 @@ export default class GameView {
     let myBoardData = player.gameBoard;
 
     let divGameHeader = this.#renderGameHeader(player);
-
+    
     this.#divPlayerStats = this.#renderStats(this.#divMain, player.id);
     this.#divPlayerStats.classList.add("player");
-
+    
     // <div id="theCase" class="case">
     let divCase = document.createElement("div");
     divCase.classList.add("case");
@@ -132,9 +150,10 @@ export default class GameView {
       myBoardData,
       player.id,
     );
-
+    
     this.#divOpponentStats = this.#renderStats(this.#divMain, opponent.id);
     this.#divOpponentStats.classList.add("opponent");
+    let divGameFooter = this.#renderGameFooter();
     this.#freezeIfGameOver();
     this.updateStats();
   }
@@ -175,12 +194,12 @@ export default class GameView {
     //playerAlert.textContent = "???";
     divGameHeader.appendChild(divAlert);
 
-    let btnEdit = document.createElement("button");
-    btnEdit.id = "player" + player.id + "Edit";
-    btnEdit.textContent = "Edit";
-    btnEdit.classList.add("button");
-    btnEdit.classList.add("edit");
-    divGameHeader.appendChild(btnEdit);
+    // let btnEdit = document.createElement("button");
+    // btnEdit.id = "player" + player.id + "Edit";
+    // btnEdit.textContent = "Edit";
+    // btnEdit.classList.add("button");
+    // btnEdit.classList.add("edit");
+    // divGameHeader.appendChild(btnEdit);
 
     return divGameHeader;
   }
@@ -242,6 +261,26 @@ export default class GameView {
     div.appendChild(divStats);
     return divStats;
   }
+
+  #renderGameFooter() {
+    // <div id="toolbar" class="toolbar">
+    // <button id="btnNewGame" type="button" class="newGame">New Game</button>
+    // </div>
+    let divToolbar = document.createElement("div");
+    divToolbar.id = "toolbar";
+    divToolbar.classList.add("toolbar");
+
+    let btnNewGame =  document.createElement("button");
+    btnNewGame.id="btnNewGame";
+    btnNewGame.type="button";
+    btnNewGame.classList.add("newGame");
+    btnNewGame.textContent = "New Game";
+    divToolbar.appendChild(btnNewGame);
+
+    this.#divMain.appendChild(divToolbar);
+    return divToolbar;
+  }
+
 
   #freezeIfGameOver() {
     if (this.#model.weHaveAWinner) {

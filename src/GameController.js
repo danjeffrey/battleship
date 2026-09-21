@@ -24,15 +24,13 @@ export default class GameController {
       this.#roboPlayer = new RoboPlayer(2, this);
     }
 
-    // These next two listeners can not be called in #setupListeners
+    // This next listener can not be called in #setupListeners
     // because they do not bind to a DOM element that will be replaced
     // when rendering the game and multiple listeners will be created for
     // each single event.
     document.addEventListener("makeAnotherMove", this.#roboMove.bind(this));
-    let btnNewGame = document.getElementById("btnNewGame");
-    btnNewGame.addEventListener("click", this.#newGame.bind(this));
 
-    this.#gamePhase = GamePhases.GAME_ON;
+    this.#gamePhase = GamePhases.GAME_SETUP;
     this.#render();
   }
 
@@ -108,15 +106,18 @@ export default class GameController {
     this.#setUpListeners();
   }
 
-  #setUpListeners() {    
+  #setUpListeners() {
     switch (this.#gamePhase) {
       case GamePhases.NEW_GAME:
         break;
       case GamePhases.GAME_SETUP:
-        this.#enableListenerPlayerClickOwnBoard();
+        //this.#enableListenerPlayerClickOwnBoard();
+        this.#enableShuffleButton();
+        this.#enableOKButton();
         break;
       case GamePhases.GAME_ON:
         this.#enableListenerPlayerClickOpponent();
+        this.#enableNewGameButton();
         break;
       case GamePhases.GAME_OVER:
         break;
@@ -135,6 +136,43 @@ export default class GameController {
       "click",
       this.#handlePlayerClick.bind(this),
     );
+  }
+
+  #enableShuffleButton() {
+    let btn = document.getElementById("btnShuffle");
+    btn.addEventListener("click", this.#shuffleShips.bind(this));
+  }
+
+  #enableOKButton() {
+    let btn = document.getElementById("btnOK");
+    btn.addEventListener("click", this.#playGame.bind(this));
+  }
+
+  #enableNewGameButton() {
+    let btnNewGame = document.getElementById("btnNewGame");
+    btnNewGame.addEventListener("click", this.#newGame.bind(this));
+  }
+
+  #shuffleShips(event) {
+    this.#updatePlayerNames();
+    this.#model.currentPlayer.clear();
+    this.#render();
+  }
+
+  #playGame(event) {
+    this.#updatePlayerNames();
+    this.#gamePhase = GamePhases.GAME_ON;
+    this.#render();
+  }
+
+  #updatePlayerNames() {
+    let inputPlayer1Name = document.getElementById("inputPlayer1Name");
+    let newName = inputPlayer1Name.value;
+    this.#model.player1.name = newName;
+
+    let inputPlayer2Name = document.getElementById("inputPlayer2Name");
+    newName = inputPlayer2Name.value;
+    this.#model.player2.name = newName;
   }
 
   #handlePlayerClick(event) {
@@ -156,7 +194,7 @@ export default class GameController {
     this.#model.weHaveAWinner = false;
     this.#view.resetGame();
     this.#roboPlayer.clear();
-    this.#gamePhase = GamePhases.GAME_ON;
+    this.#gamePhase = GamePhases.GAME_SETUP;
     this.#render(this.#gameType, this.#gamePhase);
   }
 

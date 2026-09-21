@@ -1,7 +1,7 @@
 # Battleship
 A web app written as part of the ODIN web programming tutorial: https://www.theodinproject.com/lessons/node-path-javascript-battleship
 
-### To-Do:
+### Done:
 x. Redo renderer to not alter html content except in the "render...()" methods. 
    Make a re-render occur when needed -- after other changes have been made. See
    commented lines in gameView.js
@@ -13,10 +13,10 @@ x. Fix click on used cell
 x. fix screen flash when robot plays
 x. fix ship overlaps
 x. Show ship cells for player's board.
-7. Enable users to place ships
+x. Enable users to shuflle ship placements.
 
-8. Enable two-player mode 
-8.2. Add a player swap screen - changingPlayers state variable
-8.3. Add a new game form
-9. Add game setup screen for each player
+### TODO:
+1. Enable two-player mode 
+2. Add a player swap screen - changingPlayers state variable
+3. Add game setup screen for each player in 2-player mode
 
